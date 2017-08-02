@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "babel-preset-babili": "^1.0.0",
+    "eslint": "^4.3.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-rename": "^1.2.2",
