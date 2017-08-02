@@ -1,0 +1,31 @@
+{
+  "name": "lowrezjam-2017",
+  "description": "My game for #LOWREZJAM 2017",
+  "version": "1.0.0",
+  "author": "Thunraz <thunraz@thunraz.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Thunraz/LOWREZJAM2017.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Thunraz/LOWREZJAM2017/issues"
+  },
+  "scripts": {
+    "build": "gulp",
+    "watch": "gulp && gulp watch"
+  },
+  "devDependencies": {
+    "babel-preset-babili": "^1.0.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
+    "pug": "^0.1.0",
+    "rollup": "^0.42.0",
+    "st": "^1.2.0"
+  },
+  "dependencies": {
+    "three": "^0.86.0"
+  }
+}
