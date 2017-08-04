@@ -14,6 +14,12 @@ html
         .flex-container
             .flex-row
                 #g
+
+        script#water-surface-vert(type="x-shader/x-vertex")
+            include assets/shader/water-surface-vert.glsl
+            
+        script#water-surface-frag(type="x-shader/x-fragment")
+            include assets/shader/water-surface-frag.glsl
         
         script(src="./three.js")
         script(src="./main.js", async)
