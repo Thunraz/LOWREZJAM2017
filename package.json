@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "gulp",
-    "watch": "gulp && gulp watch"
+    "start": "gulp && gulp watch"
   },
   "devDependencies": {
     "babel-preset-babili": "^1.0.0",
