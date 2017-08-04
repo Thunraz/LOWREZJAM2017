@@ -31,7 +31,7 @@ module.exports = () => {
         readFile('./src/index.pug')
             .then((str) => {
                 // development index file
-                let result = pug.compile(str)();
+                let result = pug.compile(str, { filename: './src/index.pug' })();
                 return writeFile('./dist/index.html', result);
             })
             .then(done);
