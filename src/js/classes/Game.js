@@ -16,19 +16,19 @@ class Game {
         this.camera = new THREE.PerspectiveCamera(75, this.ratio, 0.1, 20000);
         this.camera.position.z = 400;
 
-        this.renderer = new THREE.WebGLRenderer();
+        this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.renderer.setSize(64, 64);
         this.gameContainer.appendChild(this.renderer.domElement);
         this.renderer.domElement.style = null;
 
         let geometry = new THREE.BoxGeometry(200, 200, 200);
-        let material = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
+        let material = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
         this.cube    = new THREE.Mesh(geometry, material);
         this.cube.position.set(0, 0, -50);
         this.scene.add(this.cube);
 
-        this.light = new THREE.PointLight(0xffffff, 1, 100);
+        this.light = new THREE.PointLight(0xffffff, 20, 100);
         this.light.position.set(0, 0, 75);
         this.scene.add(this.light);
 
