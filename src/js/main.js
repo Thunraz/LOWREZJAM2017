@@ -1,8 +1,8 @@
 import Controls from './classes/Controls.js';
 import Game     from './classes/Game';
 
-let game     = new Game();
 let controls = new Controls();
+let game     = new Game(controls);
 
 let lastFrameTime = 0;
 
