@@ -8,7 +8,7 @@ let gulp       = require('gulp'),
 module.exports = () => {
     gulp.task('watch', ['server'], () => {
         return gulp.watch(
-            ['src/js/**/*.js', 'src/sass/**/*.s?ss', 'src/index.pug', 'src/assets/*'],
+            ['src/js/**/*.js', 'src/sass/**/*.s?ss', 'src/index.pug', 'src/assets/*', 'src/assets/**/*'],
             ['build', 'css', 'template', 'assets']
         );
     });

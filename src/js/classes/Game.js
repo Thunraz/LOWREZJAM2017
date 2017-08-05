@@ -25,11 +25,12 @@ class Game {
 
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setPixelRatio(window.devicePixelRatio);
-        this.renderer.setSize(64, 64);
+        this.renderer.setSize(GP.GameSize, GP.GameSize);
         this.gameContainer.appendChild(this.renderer.domElement);
         this.renderer.domElement.style = null;
 
         this.waterSurface = new WaterSurface(this);
+        this.scene.add(this.waterSurface);
 
         /*let geometry = new THREE.BoxGeometry(200, 200, 200);
         let material = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
@@ -69,8 +70,8 @@ class Game {
         this.controls.update();
         this.handleControls(this.controls.states, dt);
 
-        this.waterSurface.position.z = Math.cos(this.runTime) * 50;
-        this.waterSurface.position.x = Math.sin(this.runTime) * 50;
+        this.waterSurface.position.z = Math.cos(this.runTime * 2) * 50;
+        this.waterSurface.position.x = Math.sin(this.runTime * 2) * 50;
 
         /*this.cube.rotation.x += Math.sin(this.runTime) * dt * 0.5;
         this.cube.rotation.y += Math.cos(this.runTime) * dt;*/
