@@ -92,7 +92,8 @@ class Controls {
 
     /**
      * Handles key down events
-     * @param {Event} e 
+     * @param {Event} e Key down event
+     * @returns {void}
      */
     onKeyDown(e) {
         let code = this.keyCodes[e.which];
@@ -101,7 +102,8 @@ class Controls {
 
     /**
      * Handles key up events
-     * @param {Event} e 
+     * @param {Event} e Key up event
+     * @returns {void}
      */
     onKeyUp(e) {
         let code = this.keyCodes[e.which];
@@ -110,7 +112,8 @@ class Controls {
 
     /**
      * Handles mouse move event
-     * @param {Event} e 
+     * @param {Event} e Mouse move event
+     * @returns {void}
      */
     onMouseMove(e) {
         this.states.movementX = e.movementX;
