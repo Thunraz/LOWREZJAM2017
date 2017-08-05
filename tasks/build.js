@@ -16,7 +16,8 @@ module.exports = () => {
     gulp.task('build', ['copy-dependencies'], (callback) => {
         return rollup({
             entry: 'src/js/main.js',
-            sourceMap: true
+            sourceMap: true,
+            external: ['three']
         }).then(function(bundle) {
             return bundle.write({
                 dest:  'dist/main.js',
