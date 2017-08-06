@@ -1,13 +1,11 @@
-precision highp float;
-precision highp int;
-
-varying vec2 vUv;
-varying vec3 vPosition;
+uniform mat4 textureMatrix;
+varying vec4 mirrorCoord;
 
 void main()
 {
-    vUv = uv;
-    vPosition = position;
-
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    vec4 mvPosition    = modelViewMatrix * vec4( position, 1.0 );
+    vec4 worldPosition = modelMatrix     * vec4( position, 1.0 );
+    
+    mirrorCoord = textureMatrix    * worldPosition;
+    gl_Position = projectionMatrix * mvPosition;
 }

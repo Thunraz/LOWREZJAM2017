@@ -1,16 +1,21 @@
-precision highp float;
-precision highp int;
+uniform vec3 mirrorColor;
+uniform sampler2D mirrorSampler;
+varying vec4 mirrorCoord;
 
-uniform float time;
-uniform vec2 resolution;
-uniform vec3 uPosition;
+float blendOverlay(float base, float blend) {
+    return
+        base < 0.5
+        ? 2.0 * base * blend
+        : 1.0 - 2.0 * (1.0 - base) * (1.0 - blend);
+}
 
-varying vec2 vUv;
-varying vec3 vPosition;
-
-void main(void)
-{
-    vec2 uv = uPosition.xz + vUv.xy / resolution.xy;
-    gl_FragColor = vec4(uPosition.xyz, 1.0);
-    //gl_FragColor = vec4(0.5 + 0.5 * sin(time), 0.0, 1.0, 1.0);
+void main() {
+    vec4 color = texture2DProj(mirrorSampler, mirrorCoord);
+    color = vec4(
+        blendOverlay(mirrorColor.r, color.r),
+        blendOverlay(mirrorColor.g, color.g),
+        blendOverlay(mirrorColor.b, color.b),
+        1.0
+    );
+    gl_FragColor = color;
 }
