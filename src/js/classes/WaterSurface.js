@@ -9,31 +9,28 @@ class WaterSurface extends THREE.Object3D {
         this.game   = game;
         this.offset = new THREE.Vector2(0.0, 0.0);
 
-        this.mirrorOpts = {
-            mirrorPlane        : new THREE.Plane(),
-            normal             : new THREE.Vector3(),
-            mirrorWorldPosition: new THREE.Vector3(),
-            cameraWorldPosition: new THREE.Vector3(),
-            rotationMatrix     : new THREE.Matrix4(),
-            lookAtPosition     : new THREE.Vector3(0, 0, -1),
-            clipPlane          : new THREE.Vector4(),
-            
-            clipBias           : 0.0,
-            mirrorColor        : new THREE.Color(0x7f7f7f),
-            
-            textureWidth       : 512,
-            textureHeight      : 512,
-            
-            view               : new THREE.Vector3(),
-            target             : new THREE.Vector3(),
-            q                  : new THREE.Vector4(),
-        };
+        let textureSize = 512;
+        this.mirrorCamera = new THREE.PerspectiveCamera(
+            this.game.camera.fov,
+            this.game.camera.aspect,
+            this.game.camera.near,
+            this.game.camera.far
+        );
+        this.mirrorCamera.position.set(
+            this.game.camera.position.x,
+            -this.game.camera.position.y,
+            this.game.camera.position.z
+        );
+        this.mirrorCamera.rotation.set(
+            -this.game.camera.rotation.x,
+            this.game.camera.rotation.y,
+            this.game.camera.rotation.z
+        )
+        this.add(this.mirrorCamera);
 
-        this.mirrorCamera  = new THREE.PerspectiveCamera();
-        this.textureMatrix = new THREE.Matrix4();
-        this.renderTarget  = new THREE.WebGLRenderTarget(
-            this.mirrorOpts.textureWidth,
-            this.mirrorOpts.textureHeight,
+        this.renderTarget = new THREE.WebGLRenderTarget(
+            textureSize,
+            textureSize,
             {
                 minFilter: THREE.LinearFilter,
                 magFilter: THREE.LinearFilter,
@@ -42,26 +39,18 @@ class WaterSurface extends THREE.Object3D {
             }
         );
 
-        if(!THREE.Math.isPowerOfTwo(this.mirrorOpts.textureWidth)
-        || !THREE.Math.isPowerOfTwo(this.mirrorOpts.textureHeight)) {
-            this.renderTarget.texture.generateMipmaps = false;
-        }
+        let cubeGeometry = new THREE.BoxGeometry(20, 20, 20);
+        let cubeMaterial = new THREE.MeshLambertMaterial({ color: 0x00f0f0 });
+        this.cube    = new THREE.Mesh(cubeGeometry, cubeMaterial);
+        this.cube.position.copy(this.mirrorCamera.position);
+        this.cube.rotation.copy(this.mirrorCamera.rotation);
+        this.add(this.cube);
 
-        this.uniforms = {
-            mirrorColor:   { value: this.mirrorOpts.mirrorColor },
-            mirrorSampler: { value: null },
-            textureMatrix: { value: new THREE.Matrix4() }
-        };
-        
-        this.material = new THREE.ShaderMaterial({
-            fragmentShader: document.getElementById('water-surface-frag').textContent,
-            vertexShader:   document.getElementById('water-surface-vert').textContent,
-            uniforms:       this.uniforms
+        this.material = new THREE.MeshLambertMaterial({
+            color: new THREE.Color(0xffffff),
+            reflectivity: 1.0,
+            map: this.renderTarget.texture
         });
-        
-        this.material.uniforms.mirrorSampler.value = this.renderTarget.texture;
-        this.material.uniforms.mirrorColor.value   = this.mirrorOpts.mirrorColor;
-        this.material.uniforms.textureMatrix.value = this.textureMatrix;
 
         let geometry = new THREE.PlaneGeometry(200, 200, 32);
         geometry.rotateX(-Math.PI / 2);
@@ -70,7 +59,6 @@ class WaterSurface extends THREE.Object3D {
     }
 
     update(dt) {
-        this.updateTextureMatrix(this.game.camera);
         this.visible = false;
 
         // Save renderer's current values
@@ -78,85 +66,18 @@ class WaterSurface extends THREE.Object3D {
         let currentShadowAutoUpdate = this.game.renderer.shadowMap.autoUpdate;
 
         this.game.renderer.shadowMap.autoUpdate = false; // Avoid re-computing shadows
-        this.game.renderer.render(this.game.scene, this.mirrorCamera, this.game.renderTarget, true);
+        this.game.renderer.render(this.game.scene, this.mirrorCamera, this.renderTarget, true);
+
+        if(!this.yo) {
+            this.yo = true;
+            console.log(currentRenderTarget);
+        }
+        
+        // Restore saved values
         this.game.renderer.shadowMap.autoUpdate = currentShadowAutoUpdate;
-        this.game.renderer.setRenderTarget( currentRenderTarget );
+        this.game.renderer.setRenderTarget(currentRenderTarget);
 
         this.visible = true;
-
-    }
-
-    updateTextureMatrix(camera) {
-        this.updateMatrixWorld();
-
-        this.mirrorOpts.mirrorWorldPosition.setFromMatrixPosition(this.matrixWorld);
-        this.mirrorOpts.cameraWorldPosition.setFromMatrixPosition(camera.matrixWorld);
-        
-        this.mirrorOpts.rotationMatrix.extractRotation(this.matrixWorld);
-        
-        this.mirrorOpts.normal.set(0, 0, 1);
-        this.mirrorOpts.normal.applyMatrix4(this.mirrorOpts.rotationMatrix);
-
-        this.mirrorOpts.view.subVectors(this.mirrorOpts.mirrorWorldPosition, this.mirrorOpts.cameraWorldPosition);
-        this.mirrorOpts.view.reflect(this.mirrorOpts.normal).negate();
-        this.mirrorOpts.view.add(this.mirrorOpts.mirrorWorldPosition);
-
-        this.mirrorOpts.rotationMatrix.extractRotation(camera.matrixWorld);
-
-        this.mirrorOpts.lookAtPosition.set(0, 0, -1);
-        this.mirrorOpts.lookAtPosition.applyMatrix4(this.mirrorOpts.rotationMatrix);
-        this.mirrorOpts.lookAtPosition.add(this.mirrorOpts.mirrorWorldPosition);
-
-        this.mirrorCamera.position.copy(this.mirrorOpts.view);
-        this.mirrorCamera.up.set(0, -1, 0);
-        this.mirrorCamera.up.applyMatrix4(this.mirrorOpts.rotationMatrix);
-        this.mirrorCamera.up.reflect(this.mirrorOpts.normal).negate();
-        this.mirrorCamera.lookAt(this.mirrorOpts.target);
-
-        this.mirrorCamera.near = camera.near;
-        this.mirrorCamera.far  = camera.far;
-
-        this.mirrorCamera.updateMatrixWorld();
-        this.mirrorCamera.updateProjectionMatrix();
-
-        // Update the texture matrix
-        this.textureMatrix.set(
-            0.5, 0.0, 0.0, 0.5,
-            0.0, 0.5, 0.0, 0.5,
-            0.0, 0.0, 0.5, 0.5,
-            0.0, 0.0, 0.0, 1.0
-        );
-
-        this.textureMatrix.multiply(this.mirrorCamera.projectionMatrix);
-        this.textureMatrix.multiply(this.mirrorCamera.matrixWorldInverse);
-
-        // Now update projection matrix with new clip plane, implementing code from: http://www.terathon.com/code/oblique.html
-        // Paper explaining this technique: http://www.terathon.com/lengyel/Lengyel-Oblique.pdf
-        this.mirrorOpts.mirrorPlane.setFromNormalAndCoplanarPoint(this.mirrorOpts.normal, this.mirrorOpts.mirrorWorldPosition);
-        this.mirrorOpts.mirrorPlane.applyMatrix4(this.mirrorCamera.matrixWorldInverse);
-
-        this.mirrorOpts.clipPlane.set(
-            this.mirrorOpts.mirrorPlane.normal.x,
-            this.mirrorOpts.mirrorPlane.normal.y,
-            this.mirrorOpts.mirrorPlane.normal.z,
-            this.mirrorOpts.mirrorPlane.constant
-        );
-
-        let projectionMatrix = this.mirrorCamera.projectionMatrix;
-
-        this.mirrorOpts.q.x = (Math.sign(this.mirrorOpts.clipPlane.x) + projectionMatrix.elements[8]) / projectionMatrix.elements[0];
-        this.mirrorOpts.q.y = (Math.sign(this.mirrorOpts.clipPlane.y) + projectionMatrix.elements[9]) / projectionMatrix.elements[5];
-        this.mirrorOpts.q.z = -1.0;
-        this.mirrorOpts.q.w = (1.0 + projectionMatrix.elements[10]) / projectionMatrix.elements[14];
-
-        // Calculate the scaled plane vector
-        this.mirrorOpts.clipPlane.multiplyScalar(2.0 / this.mirrorOpts.clipPlane.dot(this.mirrorOpts.q));
-
-        // Replacing the third row of the projection matrix
-        projectionMatrix.elements[2]  = this.mirrorOpts.clipPlane.x;
-        projectionMatrix.elements[6]  = this.mirrorOpts.clipPlane.y;
-        projectionMatrix.elements[10] = this.mirrorOpts.clipPlane.z + 1.0 - this.mirrorOpts.clipBias;
-        projectionMatrix.elements[14] = this.mirrorOpts.clipPlane.w;
     }
 
 }

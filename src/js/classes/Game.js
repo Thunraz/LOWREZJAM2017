@@ -19,6 +19,7 @@ class Game {
         this.scene = new THREE.Scene();
 
         this.camera = new THREE.PerspectiveCamera(75, this.ratio, 0.1, 20000);
+        this.camera.name = 'main cam';
         this.camera.position.set(GP.CameraOffset.x, GP.CameraOffset.y, GP.CameraOffset.z);
         this.camera.lookAt(new THREE.Vector3(0))
 
@@ -37,12 +38,18 @@ class Game {
         this.cube.position.set(0, 0, 0);
         this.scene.add(this.cube);
 
-        this.light = new THREE.PointLight(0xffffff, 20, 100);
-        this.light.position.set(0, 0, 75);
+        this.light = new THREE.PointLight(0xffffff, 1, 1000);
+        this.light.position.set(0, 50, 150);
         this.scene.add(this.light);
+        
+        let lightSphereGeometry = new THREE.SphereGeometry(5, 8, 8);
+        let lightSphereMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        this.lightSphere = new THREE.Mesh(lightSphereGeometry, lightSphereMaterial);
+        this.lightSphere.position.copy(this.light.position);
+        this.scene.add(this.lightSphere);
 
-        this.ambient = new THREE.AmbientLight(0x444444, 1);
-        this.scene.add(this.ambient);
+        //this.ambient = new THREE.AmbientLight(0xffffff, 1);
+        //this.scene.add(this.ambient);
 
         this.runTime = 0.0;
 
