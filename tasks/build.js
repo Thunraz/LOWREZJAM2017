@@ -9,7 +9,8 @@ module.exports = () => {
     gulp.task('copy-dependencies', () => {
         return gulp
             .src([
-                './node_modules/three/build/three.js'
+                './node_modules/three/build/three.js',
+                './node_modules/three/examples/js/Mirror.js'
             ])
             .pipe(gulp.dest('./dist/'))
     });

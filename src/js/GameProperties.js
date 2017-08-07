@@ -8,8 +8,7 @@ class GameProperties {
     //*/
     static get CameraMovementSpeed() { return 200.0; }
     static get CameraOffset()        { return new THREE.Vector3(0, 400, 200); }
-    static get RTTextureWidth()      { return 512; }
-    static get RTTextureHeight()     { return this.RTTextureWidth; }
+    static get RenderTextureSize()   { return 512; }
 }
 
 export default GameProperties;

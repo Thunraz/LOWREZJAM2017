@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 
-import GP from '../GameProperties.js';
+import GP           from '../GameProperties.js';
+import Player       from './Player.js';
 import WaterSurface from './WaterSurface.js';
 
 class Game {
@@ -32,11 +33,8 @@ class Game {
         this.waterSurface = new WaterSurface(this);
         this.scene.add(this.waterSurface);
 
-        let geometry = new THREE.BoxGeometry(20, 20, 20);
-        let material = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
-        this.cube    = new THREE.Mesh(geometry, material);
-        this.cube.position.set(0, 0, 0);
-        this.scene.add(this.cube);
+        this.player = new Player(this);
+        this.scene.add(this.player);
 
         this.light = new THREE.PointLight(0xffffff, 1, 1000);
         this.light.position.set(0, 50, 150);
@@ -52,9 +50,6 @@ class Game {
         //this.scene.add(this.ambient);
 
         this.runTime = 0.0;
-
-        /*let axisHelper = new THREE.AxisHelper(500);
-        this.scene.add(axisHelper);*/
     }
     
     /**
@@ -75,6 +70,7 @@ class Game {
 
         this.controls.update();
         this.handleControls(this.controls.states, dt);
+        this.player.update(dt);
 
         this.waterSurface.position.set(
             this.camera.position.x - GP.CameraOffset.x,
@@ -89,19 +85,6 @@ class Game {
     }
 
     handleControls(states, dt) {
-        if(states.up) {
-            this.camera.position.z -= GP.CameraMovementSpeed * dt;
-        }
-        else if(states.down) {
-            this.camera.position.z += GP.CameraMovementSpeed * dt;
-        }
-
-        if(states.left) {
-            this.camera.position.x -= GP.CameraMovementSpeed * dt;
-        }
-        else if(states.right) {
-            this.camera.position.x += GP.CameraMovementSpeed * dt;
-        }
     }
 }
 
