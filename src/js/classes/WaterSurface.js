@@ -68,7 +68,7 @@ class WaterSurface extends THREE.Object3D {
 
         let geometry = new THREE.PlaneGeometry(200, 200, 32);
         geometry.rotateX(-Math.PI / 2);
-        this.plane = new THREE.Mesh(geometry, material);
+        this.plane = new THREE.Mesh(geometry, this.material);
         this.add(this.plane);
     }
 
