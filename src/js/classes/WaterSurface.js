@@ -58,8 +58,8 @@ class WaterSurface extends THREE.Object3D {
         };
         
         this.material = new THREE.ShaderMaterial( {
-            fragmentShader: document.getElementById('water-surface-frag'),
-            vertexShader:   document.getElementById('water-surface-vert'),
+            fragmentShader: document.getElementById('water-surface-frag').textContent,
+            vertexShader:   document.getElementById('water-surface-vert').textContent,
             uniforms:       this.uniforms
         });
         this.material.uniforms.mirrorSampler.value = this.renderTarget.texture;
