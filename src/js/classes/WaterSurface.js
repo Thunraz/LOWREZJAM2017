@@ -27,10 +27,6 @@ class WaterSurface extends THREE.Object3D {
             view               : new THREE.Vector3(),
             target             : new THREE.Vector3(),
             q                  : new THREE.Vector4(),
-
-            
-
-            
         };
 
         this.mirrorCamera  = new THREE.PerspectiveCamera();
@@ -62,6 +58,7 @@ class WaterSurface extends THREE.Object3D {
             vertexShader:   document.getElementById('water-surface-vert').textContent,
             uniforms:       this.uniforms
         });
+        
         this.material.uniforms.mirrorSampler.value = this.renderTarget.texture;
         this.material.uniforms.mirrorColor.value   = this.mirrorOpts.mirrorColor;
         this.material.uniforms.textureMatrix.value = this.textureMatrix;
