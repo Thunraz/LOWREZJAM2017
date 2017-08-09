@@ -31,7 +31,7 @@ class Player extends THREE.Object3D {
                 this.sails.scale.set(scale, scale, scale);
                 this.add(this.sails);
             }
-        )
+        );
 
         this.acceleration = new THREE.Vector3();
     }

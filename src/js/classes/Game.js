@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import GP           from '../GameProperties.js';
 import Player       from './Player.js';
 import WaterSurface from './WaterSurface.js';
+import WaterTrail   from './WaterTrail.js';
 
 class Game {
     /**
@@ -37,6 +38,9 @@ class Game {
 
         this.player = new Player(this);
         this.scene.add(this.player);
+
+        this.waterTrail = new WaterTrail(this);
+        this.scene.add(this.waterTrail);
 
         this.sun = new THREE.DirectionalLight(0xffffff, .5);
         this.sun.position.set(GP.SunPosition.x, GP.SunPosition.y, GP.SunPosition.z);
@@ -106,6 +110,7 @@ class Game {
         this.waterSurface.offset.y += playerPositionDelta.z / 800;
 
         this.waterSurface.update(dt);
+        this.waterTrail.update(dt);
     }
 
     handleControls(states, dt) {
