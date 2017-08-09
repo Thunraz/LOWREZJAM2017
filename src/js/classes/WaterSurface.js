@@ -30,6 +30,7 @@ class WaterSurface extends THREE.Object3D {
             color: 0x66aadd,
         });
         this.surface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
+        this.surface.receiveShadow = true;
         this.add(this.surface);
 
         this.waves = [];
@@ -54,6 +55,7 @@ class WaterSurface extends THREE.Object3D {
             this.waves.push(new THREE.Mesh(waveGeometry, waveMaterial));
             this.add(this.waves[i]);
             this.waves[i].position.y = .1;
+            this.waves[i].receiveShadow = true;
         }
     }
 

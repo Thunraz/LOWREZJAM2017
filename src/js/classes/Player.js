@@ -15,6 +15,8 @@ class Player extends THREE.Object3D {
             'assets/models/ship.json',
             (mesh) => {
                 this.ship = mesh;
+                this.ship.castShadow    = true;
+                this.ship.receiveShadow = true;
                 this.ship.scale.set(scale, scale, scale);
                 this.add(this.ship);
             }
@@ -24,6 +26,8 @@ class Player extends THREE.Object3D {
             'assets/models/sails.json',
             (mesh) => {
                 this.sails = mesh;
+                this.sails.castShadow    = true;
+                this.sails.receiveShadow = true;
                 this.sails.scale.set(scale, scale, scale);
                 this.add(this.sails);
             }

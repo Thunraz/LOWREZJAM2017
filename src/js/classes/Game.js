@@ -27,6 +27,8 @@ class Game {
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.renderer.setSize(GP.GameSize, GP.GameSize);
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type    = THREE.PCFShadowMap; 
         this.gameContainer.appendChild(this.renderer.domElement);
         this.renderer.domElement.style = null;
 
@@ -36,18 +38,23 @@ class Game {
         this.player = new Player(this);
         this.scene.add(this.player);
 
-        this.light = new THREE.PointLight(0xffffff, 1, 1000);
-        this.light.position.set(0, 50, 150);
-        this.scene.add(this.light);
+        this.sun = new THREE.DirectionalLight(0xffffff, 1);
+        this.sun.position.set(GP.SunPosition.x, GP.SunPosition.y, GP.SunPosition.z);
+        this.sun.castShadow = true;
+        this.sun.shadow.camera.near = 0.5;
+        this.sun.shadow.camera.far  = 1000;
         
-        let lightSphereGeometry = new THREE.SphereGeometry(5, 8, 8);
-        let lightSphereMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
-        this.lightSphere = new THREE.Mesh(lightSphereGeometry, lightSphereMaterial);
-        this.lightSphere.position.copy(this.light.position);
-        this.scene.add(this.lightSphere);
 
-        this.ambient = new THREE.AmbientLight(0xffffff, 1);
-        this.scene.add(this.ambient);
+        this.sun.shadow.camera.top    = 100;
+        this.sun.shadow.camera.right  = 100;
+        this.sun.shadow.camera.bottom = -100;
+        this.sun.shadow.camera.left   = -100;
+        this.sun.target = this.player;
+        
+        this.scene.add(this.sun);
+
+        let hemiLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+        this.scene.add(hemiLight);
 
         this.runTime = 0.0;
         this.buttonTimeout = 0.0;
@@ -83,10 +90,18 @@ class Game {
         let playerPositionDelta = oldPlayerPosition.sub(new THREE.Vector3(this.player.position.x, 0, this.player.position.z));
         this.camera.position.sub(playerPositionDelta);
 
+        // Move water with camera
         this.waterSurface.position.set(
             this.camera.position.x - GP.CameraOffset.x,
             this.camera.position.y - GP.CameraOffset.y,
             this.camera.position.z - GP.CameraOffset.z
+        );
+
+        // Move sun with player
+        this.sun.position.set(
+            this.player.position.x + GP.SunPosition.x,
+            this.player.position.y + GP.SunPosition.y,
+            this.player.position.z + GP.SunPosition.z
         );
 
         this.waterSurface.offset.x -= playerPositionDelta.x / 800;
