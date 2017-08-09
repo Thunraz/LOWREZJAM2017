@@ -9,19 +9,14 @@ class WaterSurface extends THREE.Object3D {
         this.game   = game;
         this.offset = new THREE.Vector2(0.0, 0.0);
 
-        this.mirror = new THREE.Mirror(
-            1200,
-            1300,
-            {
-                clipBias: 0.003,
-                textureWidth:  GP.RenderTextureSize * window.devicePixelRatio,
-                textureHeight: GP.RenderTextureSize * window.devicePixelRatio,
-                color: 0xcccccc
-            }
-        );
-        this.mirror.position.set(0, 0, 0);
-        this.mirror.rotateX(-Math.PI / 2);
-        this.add(this.mirror);
+        let surfaceGeometry = new THREE.PlaneGeometry(600, 800, 1, 1);
+        surfaceGeometry.rotateX(-Math.PI/2)
+        let surfaceMaterial = new THREE.MeshStandardMaterial({
+            color: 0x66ccff
+        });
+
+        this.surface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
+        this.add(this.surface);
     }
 
     update(dt) {
