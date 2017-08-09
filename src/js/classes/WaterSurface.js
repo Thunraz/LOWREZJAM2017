@@ -14,6 +14,15 @@ class WaterSurface extends THREE.Object3D {
         this.tex2 = textureLoader.load('assets/img/water-bump-2.png');
         this.tex3 = textureLoader.load('assets/img/water-bump-3.png');
         this.tex4 = textureLoader.load('assets/img/water-bump-4.png');
+        
+        this.tex1.wrapS = THREE.WrapAroundEnding;
+        this.tex1.wrapT = THREE.WrapAroundEnding;
+        this.tex2.wrapS = THREE.WrapAroundEnding;
+        this.tex2.wrapT = THREE.WrapAroundEnding;
+        this.tex3.wrapS = THREE.WrapAroundEnding;
+        this.tex3.wrapT = THREE.WrapAroundEnding;
+        this.tex4.wrapS = THREE.WrapAroundEnding;
+        this.tex4.wrapT = THREE.WrapAroundEnding;
 
         let surfaceGeometry = new THREE.PlaneGeometry(600, 800, 1, 1);
         surfaceGeometry.rotateX(-Math.PI / 2)
@@ -50,7 +59,12 @@ class WaterSurface extends THREE.Object3D {
 
     update(dt) {
         for(let i = 0; i < this.waves.length; i++) {
-            this.waves[i].material.opacity = (Math.sin((this.game.runTime + i) * 10) + 1) / 6;
+            this.waves[i].material.opacity = (Math.sin((this.game.runTime + Math.PI * i / 2) * 5) + 1) / 6;
+            
+            this.waves[i].material.alphaMap.offset.x = this.offset.x;
+            this.waves[i].material.alphaMap.offset.y = this.offset.y;
+            this.waves[i].material.alphaMap.offset.x %= 1;
+            this.waves[i].material.alphaMap.offset.y %= 1;
         }
     }
 

@@ -74,9 +74,14 @@ class Game {
             this.buttonTimeout -= dt;
         }
 
+        let oldPlayerPosition = new THREE.Vector3(this.player.position.x, 0, this.player.position.z);
+
         this.controls.update();
         this.handleControls(this.controls.states, dt);
         this.player.update(dt);
+
+        let playerPositionDelta = oldPlayerPosition.sub(new THREE.Vector3(this.player.position.x, 0, this.player.position.z));
+        this.camera.position.sub(playerPositionDelta);
 
         this.waterSurface.position.set(
             this.camera.position.x - GP.CameraOffset.x,
@@ -84,7 +89,10 @@ class Game {
             this.camera.position.z - GP.CameraOffset.z
         );
 
-        this.waterSurface.update();
+        this.waterSurface.offset.x -= playerPositionDelta.x / 800;
+        this.waterSurface.offset.y += playerPositionDelta.z / 800;
+
+        this.waterSurface.update(dt);
     }
 
     handleControls(states, dt) {
