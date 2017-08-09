@@ -12,7 +12,7 @@ class Player extends THREE.Object3D {
 
         let loader = new THREE.ObjectLoader();
         loader.load(
-            '/assets/models/ship.json',
+            'assets/models/ship.json',
             (mesh) => {
                 this.ship = mesh;
                 this.ship.scale.set(scale, scale, scale);
@@ -21,7 +21,7 @@ class Player extends THREE.Object3D {
         );
 
         loader.load(
-            '/assets/models/sails.json',
+            'assets/models/sails.json',
             (mesh) => {
                 this.sails = mesh;
                 this.sails.scale.set(scale, scale, scale);
