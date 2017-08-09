@@ -11,7 +11,7 @@ class GameProperties {
     static get RenderTextureSize()   { return 512; }
     static get ButtonTimeout()       { return 0.25; }
 
-    static get PlayerAcceleration()  { return 100.0; }
+    static get PlayerAcceleration()  { return 1.0; }
     static get PlayerTurnSpeed()     { return 2.0; }
 }
 

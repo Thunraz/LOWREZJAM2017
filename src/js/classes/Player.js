@@ -53,17 +53,17 @@ class Player extends THREE.Object3D {
 
         this.rotation.x *= 0.99;
 
-        this.acceleration.multiplyScalar(0.95);
+        this.acceleration.multiplyScalar(0.99);
     }
 
     handleControls(states, dt) {
         if(states.up) {
-            this.acceleration.x = -Math.sin(this.rotation.y) * GP.PlayerAcceleration * dt;
-            this.acceleration.z = -Math.cos(this.rotation.y) * GP.PlayerAcceleration * dt;
+            this.acceleration.x += -Math.sin(this.rotation.y) * GP.PlayerAcceleration * dt;
+            this.acceleration.z += -Math.cos(this.rotation.y) * GP.PlayerAcceleration * dt;
         }
         else if(states.down) {
-            this.acceleration.x = Math.sin(this.rotation.y) * GP.PlayerAcceleration * dt;
-            this.acceleration.z = Math.cos(this.rotation.y) * GP.PlayerAcceleration * dt;
+            this.acceleration.x += Math.sin(this.rotation.y) * GP.PlayerAcceleration * dt;
+            this.acceleration.z += Math.cos(this.rotation.y) * GP.PlayerAcceleration * dt;
         }
 
         if(states.left) {
