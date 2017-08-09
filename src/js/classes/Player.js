@@ -13,27 +13,38 @@ class Player extends THREE.Object3D {
         this.cube    = new THREE.Mesh(geometry, material);
         this.cube.position.set(0, 0, 0);
         this.add(this.cube);
+
+        this.acceleration = new THREE.Vector3();
     }
 
     update(dt) {
         this.handleControls(this.game.controls.states, dt);
 
+        this.position.x += this.acceleration.x;
+        this.position.z += this.acceleration.z;
+
+        // Bop around in the water
         this.cube.position.y = -0.5 * Math.sin(2 * this.game.runTime) + 1.5 * Math.sin(3 * this.game.runTime) + 0.5;
+        this.cube.rotation.z = Math.sin(1.5 * this.game.runTime) * 0.1;
+
+        this.acceleration.multiplyScalar(0.9);
     }
 
     handleControls(states, dt) {
         if(states.up) {
-            this.position.z -= GP.CameraMovementSpeed * dt;
+            this.acceleration.x = -Math.sin(this.rotation.y) * GP.PlayerAcceleration * dt;
+            this.acceleration.z = -Math.cos(this.rotation.y) * GP.PlayerAcceleration * dt;
         }
         else if(states.down) {
-            this.position.z += GP.CameraMovementSpeed * dt;
+            this.acceleration.x = Math.sin(this.rotation.y) * GP.PlayerAcceleration * dt;
+            this.acceleration.z = Math.cos(this.rotation.y) * GP.PlayerAcceleration * dt;
         }
 
         if(states.left) {
-            this.position.x -= GP.CameraMovementSpeed * dt;
+            this.rotation.y += GP.PlayerTurnSpeed * dt;
         }
         else if(states.right) {
-            this.position.x += GP.CameraMovementSpeed * dt;
+            this.rotation.y -= GP.PlayerTurnSpeed * dt;
         }
     }
 }
