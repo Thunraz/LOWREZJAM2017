@@ -30,6 +30,8 @@ class Controls {
             83: 'down',  // S
             65: 'left',  // A
             68: 'right', // D
+            
+            82: 'toggleRecord', // R
         };
         
         this.states = {
@@ -46,7 +48,9 @@ class Controls {
             left                : false,
             right               : false,
             movementX           : 0.0,
-            movementY           : 0.0
+            movementY           : 0.0,
+
+            toggleRecord        : false
         };
     }
 
@@ -97,7 +101,10 @@ class Controls {
      */
     onKeyDown(e) {
         let code = this.keyCodes[e.which];
-        this.states[code] = true;
+
+        if(code !== undefined) {
+            this.states[code] = true;
+        }
     }
 
     /**
@@ -107,7 +114,10 @@ class Controls {
      */
     onKeyUp(e) {
         let code = this.keyCodes[e.which];
-        this.states[code] = false;
+        
+        if(code !== undefined) {
+            this.states[code] = false;
+        }
     }
 
     /**

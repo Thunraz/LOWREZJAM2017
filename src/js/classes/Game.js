@@ -46,10 +46,12 @@ class Game {
         this.lightSphere.position.copy(this.light.position);
         this.scene.add(this.lightSphere);
 
-        //this.ambient = new THREE.AmbientLight(0xffffff, 1);
-        //this.scene.add(this.ambient);
+        this.ambient = new THREE.AmbientLight(0xffffff, 1);
+        this.scene.add(this.ambient);
 
         this.runTime = 0.0;
+        this.buttonTimeout = 0.0;
+        this.isRecording = false;
     }
     
     /**
@@ -68,6 +70,10 @@ class Game {
     update(dt) {
         this.runTime += dt;
 
+        if(this.buttonTimeout >= 0.0) {
+            this.buttonTimeout -= dt;
+        }
+
         this.controls.update();
         this.handleControls(this.controls.states, dt);
         this.player.update(dt);
@@ -78,13 +84,50 @@ class Game {
             this.camera.position.z - GP.CameraOffset.z
         );
 
-        /*this.cube.rotation.x += Math.sin(this.runTime) * dt * 0.5;
-        this.cube.rotation.y += Math.cos(this.runTime) * dt;*/
-
         this.waterSurface.update();
     }
 
     handleControls(states, dt) {
+        if(states.toggleRecord && this.buttonTimeout <= 0.0) {
+            this.buttonTimeout += GP.ButtonTimeout;
+            this.isRecording = !this.isRecording;
+
+            if(this.isRecording) {
+                console.log('Start recording');
+                this.stream = this.renderer.domElement.captureStream();
+                this.recordedBlobs = [];
+
+                let options = { mimeType: 'video/webm' };
+                try {
+                    this.mediaRecorder = new MediaRecorder(this.stream, options);
+                    //this.mediaRecorder.onstop = () => {};
+
+                    this.mediaRecorder.ondataavailable = (event) => {
+                        if (event.data && event.data.size > 0) {
+                            this.recordedBlobs.push(event.data);
+                        }
+                    };
+                    this.mediaRecorder.start(100); // collect 100ms of data
+                } catch(e) {
+                    console.warn('Unable to create MediaRecorder with options Object: ', e);
+                }
+            } else {
+                console.log('Stop recording');
+                this.mediaRecorder.stop();
+                let blob = new Blob(this.recordedBlobs, { type: 'video/webm' });
+                let url  = window.URL.createObjectURL(blob);
+                let a    = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'output.webm';
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(function() {
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                }, 100);
+            }
+        }
     }
 }
 
