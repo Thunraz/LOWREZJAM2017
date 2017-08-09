@@ -8,11 +8,26 @@ class Player extends THREE.Object3D {
 
         this.game = game;
 
-        let geometry = new THREE.BoxGeometry(20, 20, 20);
-        let material = new THREE.MeshLambertMaterial({ color: 0xffff00 });
-        this.cube    = new THREE.Mesh(geometry, material);
-        this.cube.position.set(0, 0, 0);
-        this.add(this.cube);
+        let scale = 15;
+
+        let loader = new THREE.ObjectLoader();
+        loader.load(
+            '/assets/models/ship.json',
+            (mesh) => {
+                this.ship = mesh;
+                this.ship.scale.set(scale, scale, scale);
+                this.add(this.ship);
+            }
+        );
+
+        loader.load(
+            '/assets/models/sails.json',
+            (mesh) => {
+                this.sails = mesh;
+                this.sails.scale.set(scale, scale, scale);
+                this.add(this.sails);
+            }
+        )
 
         this.acceleration = new THREE.Vector3();
     }
@@ -24,10 +39,21 @@ class Player extends THREE.Object3D {
         this.position.z += this.acceleration.z;
 
         // Bop around in the water
-        this.cube.position.y = -0.5 * Math.sin(2 * this.game.runTime) + 1.5 * Math.sin(3 * this.game.runTime) + 0.5;
-        this.cube.rotation.z = Math.sin(1.5 * this.game.runTime) * 0.1;
+        this.position.y = -0.5 * Math.sin(2 * this.game.runTime) + 1.5 * Math.sin(3 * this.game.runTime) + 0.5;
+        this.rotation.z = Math.sin(1.5 * this.game.runTime) * 0.1;
 
-        this.acceleration.multiplyScalar(0.9);
+        let rot = this.acceleration.x + this.acceleration.z;
+        let maxAngle = 5;
+        this.rotation.x += rot * Math.PI / 180;
+        if(this.rotation.x >= maxAngle * Math.PI / 180) {
+            this.rotation.x = maxAngle * Math.PI / 180;
+        } else if(this.rotation.x <= -maxAngle * Math.PI / 180) {
+            this.rotation.x = -maxAngle * Math.PI / 180;
+        }
+
+        this.rotation.x *= 0.99;
+
+        this.acceleration.multiplyScalar(0.95);
     }
 
     handleControls(states, dt) {
