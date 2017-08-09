@@ -100,7 +100,6 @@ class Game {
                 let options = { mimeType: 'video/webm' };
                 try {
                     this.mediaRecorder = new MediaRecorder(this.stream, options);
-                    //this.mediaRecorder.onstop = () => {};
 
                     this.mediaRecorder.ondataavailable = (event) => {
                         if (event.data && event.data.size > 0) {
