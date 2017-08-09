@@ -15,14 +15,14 @@ class WaterSurface extends THREE.Object3D {
         this.tex3 = textureLoader.load('assets/img/water-bump-3.png');
         this.tex4 = textureLoader.load('assets/img/water-bump-4.png');
         
-        this.tex1.wrapS = THREE.WrapAroundEnding;
-        this.tex1.wrapT = THREE.WrapAroundEnding;
-        this.tex2.wrapS = THREE.WrapAroundEnding;
-        this.tex2.wrapT = THREE.WrapAroundEnding;
-        this.tex3.wrapS = THREE.WrapAroundEnding;
-        this.tex3.wrapT = THREE.WrapAroundEnding;
-        this.tex4.wrapS = THREE.WrapAroundEnding;
-        this.tex4.wrapT = THREE.WrapAroundEnding;
+        this.tex1.wrapS = THREE.RepeatWrapping;
+        this.tex1.wrapT = THREE.RepeatWrapping;
+        this.tex2.wrapS = THREE.RepeatWrapping;
+        this.tex2.wrapT = THREE.RepeatWrapping;
+        this.tex3.wrapS = THREE.RepeatWrapping;
+        this.tex3.wrapT = THREE.RepeatWrapping;
+        this.tex4.wrapS = THREE.RepeatWrapping;
+        this.tex4.wrapT = THREE.RepeatWrapping;
 
         let surfaceGeometry = new THREE.PlaneGeometry(600, 800, 1, 1);
         surfaceGeometry.rotateX(-Math.PI / 2)
