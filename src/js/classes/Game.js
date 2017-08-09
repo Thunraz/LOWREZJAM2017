@@ -38,19 +38,17 @@ class Game {
         this.player = new Player(this);
         this.scene.add(this.player);
 
-        this.sun = new THREE.DirectionalLight(0xffffff, 1);
+        this.sun = new THREE.DirectionalLight(0xffffff, .5);
         this.sun.position.set(GP.SunPosition.x, GP.SunPosition.y, GP.SunPosition.z);
         this.sun.castShadow = true;
         this.sun.shadow.camera.near = 0.5;
         this.sun.shadow.camera.far  = 1000;
         
-
         this.sun.shadow.camera.top    = 100;
         this.sun.shadow.camera.right  = 100;
         this.sun.shadow.camera.bottom = -100;
         this.sun.shadow.camera.left   = -100;
         this.sun.target = this.player;
-        
         this.scene.add(this.sun);
 
         let hemiLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
