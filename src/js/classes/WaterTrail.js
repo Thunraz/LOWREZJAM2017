@@ -29,10 +29,10 @@ class WaterTrail extends THREE.Object3D {
             this.numFrames = 0;
 
             let sternPos = this.game.player.position.clone();
-            sternPos.x += Math.sin(this.game.player.rotation.y) * 50;
-            sternPos.z += Math.cos(this.game.player.rotation.y) * 50;
+            sternPos.x += Math.sin(this.game.player.rotation.y) * 40;
+            sternPos.z += Math.cos(this.game.player.rotation.y) * 40;
             this.playerPositions.push(sternPos);
-            while(this.playerPositions.length > 20) {
+            while(this.playerPositions.length > 100) {
                 this.playerPositions = this.playerPositions.slice(1);
             }
 
@@ -40,9 +40,13 @@ class WaterTrail extends THREE.Object3D {
                 let positions   = [];
                 let colors      = [];
                 for(let i = 1; i < this.playerPositions.length; i++) {
-                    positions.push(this.playerPositions[i - 1].x, 0.5, this.playerPositions[i - 1].z);
-                    let col = 1 - (i / this.playerPositions.length / 2 + 0.5);
-                    colors.push(col, col, col);
+                    let y = Math.pow(i, 2) / Math.pow(this.playerPositions.length, 2) - 1;
+                    positions.push(
+                        this.playerPositions[i - 1].x,
+                        y,
+                        this.playerPositions[i - 1].z
+                    );
+                    colors.push(1, 1, 1);
                 }
                 
                 this.waterTrail.geometry.dispose();
