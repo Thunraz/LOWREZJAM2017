@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 class GameProperties {
-    /*
+    //*
     static get GameSize()            { return 900; }
     /*/
     static get GameSize()            { return 64; }

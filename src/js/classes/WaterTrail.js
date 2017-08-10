@@ -61,10 +61,19 @@ class WaterTrail extends THREE.Object3D {
                     let y = 0.5;
                     let z = this.playerPositions[i - 1].pos.z;
 
+                    let pSin = Math.sin(dir)  * trailWidth;
+                    let nSin = Math.sin(-dir) * trailWidth;
+                    let pCos = Math.cos(dir)  * trailWidth;
+                    let nCos = Math.cos(-dir) * trailWidth;
+
                     positions.push(
-                        x + Math.cos(dir) * trailWidth, y, z + Math.cos(dir) * trailWidth + trailLength,
-                        x + trailWidth, y, z + Math.cos(dir) * trailWidth - trailLength,
-                        x - trailWidth, y, z + Math.cos(dir) * trailWidth - trailLength
+                        x + pCos, y, z + nSin,
+                        x + pCos, y, z + pSin,
+                        x + nCos, y, z + pSin,
+
+                        x + pCos, y, z - nSin,
+                        x - nCos, y, z + pSin,
+                        x - cos, y, z - sin
                     );
 
                     if(!this.first) {
