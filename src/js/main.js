@@ -6,6 +6,8 @@ let game     = new Game(controls);
 
 let lastFrameTime = 0;
 
+let frameCounter = 0;
+
 /**
  * Main game loop
  * @param {number} currentFrameTime Time in seconds
@@ -19,9 +21,12 @@ function gameLoop(currentFrameTime) {
     if(controls.enabled) {
         controls.update();
         game.update(deltaT / 1000);
+        game.draw();
+    } else if(frameCounter % 10 == 0) {
+        game.draw();
     }
 
-    game.draw();
+    frameCounter++;
 }
 
 gameLoop();
