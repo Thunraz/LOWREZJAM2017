@@ -54,33 +54,26 @@ class WaterTrail extends THREE.Object3D {
             if(this.waterTrail) {
                 let positions   = [];
                 let colors      = [];
+                let points = [
+                    new THREE.Vector3(+trailWidth, 0, -trailWidth),
+                    new THREE.Vector3(+trailWidth, 0, +trailWidth),
+                    new THREE.Vector3(-trailWidth, 0, +trailWidth)
+                ];
+
                 for(let i = 1; i < this.playerPositions.length; i++) {
-                    let dir = this.playerPositions[i - 1].angle;
-                    let x = this.playerPositions[i - 1].pos.x;
                     //let y = Math.pow(i, 2) / Math.pow(this.playerPositions.length, 2) - 1;
                     let y = 0.5;
-                    let z = this.playerPositions[i - 1].pos.z;
 
-                    let pSin = Math.sin(dir)  * trailWidth;
-                    let nSin = Math.sin(-dir) * trailWidth;
-                    let pCos = Math.cos(dir)  * trailWidth;
-                    let nCos = Math.cos(-dir) * trailWidth;
-
-                    positions.push(
-                        x + pCos, y, z + nSin,
-                        x + pCos, y, z + pSin,
-                        x + nCos, y, z + pSin,
-
-                        x + pCos, y, z - nSin,
-                        x - nCos, y, z + pSin,
-                        x - cos, y, z - sin
+                    let offset   = this.playerPositions[i - 1].pos;
+                    let rotAngle = this.playerPositions[i - 1].angle;
+                    let rot = new THREE.Vector3(
+                        Math.cos(rotAngle)  * offset.x + Math.sin(rotAngle) * offset.y,
+                        0,
+                        -Math.sin(rotAngle) * offset.x + Math.cos(rotAngle) * offset.y
                     );
 
-                    if(!this.first) {
-                        this.first = true;
-                        console.log('x', x);
-                        console.log('direction', dir);
-                        console.log(this.playerPositions);
+                    for(let j = 0; j < points.length; j++) {
+                        positions.push(points[j].x + rot.x * 20, y, points[j].z + rot.z * 20);
                     }
 
                     for(let j = 0; j < positions.length; j++) colors.push(1);
