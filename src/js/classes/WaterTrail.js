@@ -38,10 +38,10 @@ class WaterTrail extends THREE.Object3D {
 
         if(this.numFrames % 6 == 0) {
             this.numFrames = 0;
+
             let angle = this.game.player.rotation.y;
 
-            let trailWidth  = 5;
-            let trailLength = 10;
+            let trailWidth  = 7.5;
 
             let sternPos = this.game.player.position.clone();
             sternPos.x += Math.sin(angle) * 40;
@@ -54,32 +54,34 @@ class WaterTrail extends THREE.Object3D {
             if(this.waterTrail) {
                 let positions   = [];
                 let colors      = [];
-                let points = [
+                let offsets = [
                     new THREE.Vector3(+trailWidth, 0, -trailWidth),
                     new THREE.Vector3(+trailWidth, 0, +trailWidth),
-                    new THREE.Vector3(-trailWidth, 0, +trailWidth)
+                    new THREE.Vector3(-trailWidth, 0, +trailWidth),
+                    new THREE.Vector3(+trailWidth, 0, -trailWidth),
+                    new THREE.Vector3(-trailWidth, 0, +trailWidth),
+                    new THREE.Vector3(-trailWidth, 0, -trailWidth)
                 ];
 
                 for(let i = 1; i < this.playerPositions.length; i++) {
-                    //let y = Math.pow(i, 2) / Math.pow(this.playerPositions.length, 2) - 1;
-                    let y = 0.5;
+                    let y = Math.pow(i, 2) / Math.pow(this.playerPositions.length, 2) - 0.5;
+                    //let y = 0.5;
 
-                    let offset   = this.playerPositions[i - 1].pos;
+                    let point    = this.playerPositions[i - 1].pos;
                     let rotAngle = this.playerPositions[i - 1].angle;
-                    let rot = new THREE.Vector3(
-                        Math.cos(rotAngle)  * offset.x + Math.sin(rotAngle) * offset.y,
-                        0,
-                        -Math.sin(rotAngle) * offset.x + Math.cos(rotAngle) * offset.y
-                    );
 
-                    for(let j = 0; j < points.length; j++) {
-                        positions.push(points[j].x + rot.x * 20, y, points[j].z + rot.z * 20);
+                    for(let j = 0; j < offsets.length; j++) {
+                        let rot = new THREE.Vector3(
+                            Math.cos(rotAngle)  * offsets[j].x + Math.sin(rotAngle) * offsets[j].z,
+                            offsets[j].y,
+                            -Math.sin(rotAngle) * offsets[j].x + Math.cos(rotAngle) * offsets[j].z
+                        );
+
+                        positions.push(point.x + rot.x, y + rot.y, point.z + rot.z);
                     }
 
                     for(let j = 0; j < positions.length; j++) colors.push(1);
                 }
-
-                //console.log(positions);
                 
                 this.waterTrail.geometry.dispose();
                 this.waterTrail.geometry = null;
