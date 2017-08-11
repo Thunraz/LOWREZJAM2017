@@ -1,3 +1,4 @@
+blender/*.blend1
 dist/
 
 # Created by https://www.gitignore.io/api/node,windows,osx,linux,visualstudiocode
