@@ -7,16 +7,8 @@ class WaterTrail extends THREE.Object3D {
         this.game = game;
 
         let geometry  = new THREE.BufferGeometry();
-        let material  = new THREE.MeshBasicMaterial({ color: 0xe6ffff, side: THREE.DoubleSide });
-        let positions = [
-            5, 0.5, 50,
-            5, 0.5, 40,
-            -5, 0.5, 40,
-
-            -5, 0.5, 40,
-            -5, 0.5, 50,
-            5, 0.5, 50,
-        ];
+        let material  = new THREE.MeshBasicMaterial({ color: 0xe6ffff });
+        let positions = [];
         let colors = [];
         for(let i = 0; i < positions.length; i++) {
             colors.push(1);
@@ -41,8 +33,6 @@ class WaterTrail extends THREE.Object3D {
 
             let angle = this.game.player.rotation.y;
 
-            let trailWidth  = 7.5;
-
             let sternPos = this.game.player.position.clone();
             sternPos.x += Math.sin(angle) * 40;
             sternPos.z += Math.cos(angle) * 40;
@@ -54,13 +44,15 @@ class WaterTrail extends THREE.Object3D {
             if(this.waterTrail) {
                 let positions   = [];
                 let colors      = [];
+                let trailWidth  = 7.5;
                 let offsets = [
                     new THREE.Vector3(+trailWidth, 0, -trailWidth),
+                    new THREE.Vector3(-trailWidth, 0, +trailWidth),
                     new THREE.Vector3(+trailWidth, 0, +trailWidth),
-                    new THREE.Vector3(-trailWidth, 0, +trailWidth),
+
                     new THREE.Vector3(+trailWidth, 0, -trailWidth),
-                    new THREE.Vector3(-trailWidth, 0, +trailWidth),
-                    new THREE.Vector3(-trailWidth, 0, -trailWidth)
+                    new THREE.Vector3(-trailWidth, 0, -trailWidth),
+                    new THREE.Vector3(-trailWidth, 0, +trailWidth)
                 ];
 
                 for(let i = 1; i < this.playerPositions.length; i++) {
