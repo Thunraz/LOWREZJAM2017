@@ -51,6 +51,21 @@ class Port extends THREE.Object3D {
             }
         );
 
+        loader.load(
+            'assets/models/island.json',
+            (mesh) => {
+                this.island = mesh;
+                this.island.castShadow    = true;
+                this.island.receiveShadow = true;
+                this.island.scale.set(scale, scale, scale);
+                this.island.material = new THREE.MeshStandardMaterial({
+                    name: 'Sand',
+                    color: 0x336699
+                });
+                this.add(this.island);
+            }
+        );
+
         this.rotateY(-Math.PI / 2);
     }
 }

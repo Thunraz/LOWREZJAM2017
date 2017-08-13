@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 
 import GP           from '../GameProperties.js';
-import Island       from './Island.js';
 import Player       from './Player.js';
 import Port         from './Port.js';
 import WaterSurface from './WaterSurface.js';
@@ -43,9 +42,6 @@ class Game {
 
         this.waterTrail = new WaterTrail(this);
         this.scene.add(this.waterTrail);
-        
-        this.island = new Island(this);
-        this.scene.add(this.island);
 
         this.port = new Port(this);
         this.scene.add(this.port);
