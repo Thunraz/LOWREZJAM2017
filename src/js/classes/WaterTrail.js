@@ -9,13 +9,8 @@ class WaterTrail extends THREE.Object3D {
         let geometry  = new THREE.BufferGeometry();
         let material  = new THREE.MeshBasicMaterial({ color: 0xe6ffff });
         let positions = [];
-        let colors = [];
-        for(let i = 0; i < positions.length; i++) {
-            colors.push(1);
-        }
 
         geometry.addAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
-        geometry.addAttribute('color',    new THREE.BufferAttribute(new Float32Array(colors),    3));
 
         this.playerPositions = [];
 
@@ -43,7 +38,6 @@ class WaterTrail extends THREE.Object3D {
 
             if(this.waterTrail) {
                 let positions   = [];
-                let colors      = [];
                 let trailWidth  = 7.5;
                 let offsets = [
                     new THREE.Vector3(+trailWidth, 0, -trailWidth),
@@ -71,8 +65,6 @@ class WaterTrail extends THREE.Object3D {
 
                         positions.push(point.x + rot.x, y + rot.y, point.z + rot.z);
                     }
-
-                    for(let j = 0; j < positions.length; j++) colors.push(1);
                 }
                 
                 this.waterTrail.geometry.dispose();
@@ -80,7 +72,6 @@ class WaterTrail extends THREE.Object3D {
                 this.waterTrail.geometry = new THREE.BufferGeometry();
                 
                 this.waterTrail.geometry.attributes.position = new THREE.BufferAttribute(new Float32Array(positions), 3);
-                this.waterTrail.geometry.attributes.color    = new THREE.BufferAttribute(new Float32Array(colors),    3);
             }
         }
     }
