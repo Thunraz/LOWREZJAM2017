@@ -3,6 +3,10 @@ import * as THREE from 'three';
 import GP from '../GameProperties';
 
 class Player extends THREE.Object3D {
+    /**
+     * Loads player meshes
+     * @param {Game} game Game instance
+     */
     constructor(game) {
         super();
 

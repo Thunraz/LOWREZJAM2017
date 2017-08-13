@@ -2,6 +2,7 @@ import * as THREE from 'three';
 
 import GP           from '../GameProperties.js';
 import Player       from './Player.js';
+import Port         from './Port.js';
 import WaterSurface from './WaterSurface.js';
 import WaterTrail   from './WaterTrail.js';
 
@@ -42,16 +43,19 @@ class Game {
         this.waterTrail = new WaterTrail(this);
         this.scene.add(this.waterTrail);
 
+        this.port = new Port(this);
+        this.scene.add(this.port);
+
         this.sun = new THREE.DirectionalLight(0xffffff, .5);
         this.sun.position.set(GP.SunPosition.x, GP.SunPosition.y, GP.SunPosition.z);
         this.sun.castShadow = true;
         this.sun.shadow.camera.near = 0.5;
         this.sun.shadow.camera.far  = 1000;
         
-        this.sun.shadow.camera.top    = 100;
-        this.sun.shadow.camera.right  = 100;
-        this.sun.shadow.camera.bottom = -100;
-        this.sun.shadow.camera.left   = -100;
+        this.sun.shadow.camera.top    = 300;
+        this.sun.shadow.camera.right  = 200;
+        this.sun.shadow.camera.bottom = -200;
+        this.sun.shadow.camera.left   = -200;
         this.sun.target = this.player;
         this.scene.add(this.sun);
 
