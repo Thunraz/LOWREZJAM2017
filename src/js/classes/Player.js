@@ -12,7 +12,7 @@ class Player extends THREE.Object3D {
 
         this.game = game;
 
-        this.enableBop = true;
+        this.enableBop = false;
 
         let scale = 15;
 
@@ -36,7 +36,7 @@ class Player extends THREE.Object3D {
 
                 let boundingBoxGeometry = new THREE.BoxGeometry(
                     dimensions.x, dimensions.y, dimensions.z,
-                    //4, 4, 12
+                    //4, 4, 12,
                     1, 1, 1
                 );
                 let boundingBoxMaterial = new THREE.MeshBasicMaterial({ color: 0xff00ff, visible: true, wireframe: true });
@@ -59,6 +59,14 @@ class Player extends THREE.Object3D {
         this.acceleration = new THREE.Vector3();
         this.raycaster = new THREE.Raycaster();
         this.numFrames = 0;
+
+        let lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, vertexColors: true });
+        let lineGeometry = new THREE.BufferGeometry();
+        lineGeometry.addAttribute('position', new THREE.BufferAttribute(new Float32Array([]), 3));
+        lineGeometry.addAttribute('color', new THREE.BufferAttribute(new Float32Array([]), 3));
+
+        this.line = new THREE.Line(lineGeometry, lineMaterial);
+        this.add(this.line);
     }
 
     update(dt) {
@@ -93,19 +101,41 @@ class Player extends THREE.Object3D {
         this.rotation.x *= 0.99;
 
         this.acceleration.multiplyScalar(0.99);
-
         if(this.acceleration.length() <= 0.01) this.acceleration.multiplyScalar(0.0);
     }
 
     checkForCollision() {
         let first = true;
 
+        let boundingBoxes = this.game.port.children.filter((cur) => {
+            return cur.name.startsWith('bounding_box_');
+        });
+        
+        this.game.debug(this.position);
+
         for (let index = 0; index < this.boundingBox.geometry.vertices.length; index++) {
             let localVertex     = this.boundingBox.geometry.vertices[index].clone();
-            let directionVector = new THREE.Vector3().subVectors(localVertex, this.position);
+            localVertex.add(this.position);
+            let directionVector = localVertex.clone();
+            directionVector.sub(this.position);
+
+            if(index == 0) {
+                this.game.debug(localVertex);
+                let vertices = new Float32Array([
+                    this.position.x, 50, this.position.z,
+                    directionVector.x, directionVector.y, directionVector.z
+                ]);
+                let colors = new Float32Array([
+                    1.0, 1.0, 0.0,
+                    0.0, 1.0, 1.0
+                ]);
+                this.line.geometry = new THREE.BufferGeometry();
+                this.line.geometry.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
+                this.line.geometry.addAttribute('color',    new THREE.BufferAttribute(colors, 3));
+            }
 
             this.raycaster.set(localVertex, directionVector.clone().normalize());
-            let result = this.raycaster.intersectObjects(this.game.port.children);
+            let result = this.raycaster.intersectObjects(boundingBoxes);
             if(result == null) continue;
             
             if (result.length > 0 && result[0].distance < directionVector.length()) {

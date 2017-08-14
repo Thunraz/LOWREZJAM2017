@@ -45,6 +45,7 @@ class Port extends THREE.Object3D {
                         (boundingBox.min.y + boundingBox.max.y) / 2,
                         (boundingBox.min.z + boundingBox.max.z) / 2
                     );
+                    boundingBoxMesh.name = 'bounding_box_' + i;
                     this.add(boundingBoxMesh);
 
 
@@ -100,7 +101,7 @@ class Port extends THREE.Object3D {
     }
 
     update(dt) {
-        
+
     }
 }
 
