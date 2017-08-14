@@ -43,6 +43,12 @@ class Player extends THREE.Object3D {
     update(dt) {
         this.handleControls(this.game.controls.states, dt);
 
+        if(this.checkForCollision()) {
+            let factor = -0.5;
+            this.acceleration.x = this.acceleration.x * factor;
+            this.acceleration.z = this.acceleration.z * factor;
+        }
+
         this.position.x += this.acceleration.x;
         this.position.z += this.acceleration.z;
 
@@ -62,6 +68,10 @@ class Player extends THREE.Object3D {
         this.rotation.x *= 0.99;
 
         this.acceleration.multiplyScalar(0.99);
+    }
+
+    checkForCollision() {
+        
     }
 
     handleControls(states, dt) {
