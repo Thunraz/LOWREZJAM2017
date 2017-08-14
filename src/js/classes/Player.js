@@ -12,7 +12,7 @@ class Player extends THREE.Object3D {
 
         this.game = game;
 
-        this.enableBop = false;
+        this.enableBop = true;
 
         let scale = 15;
 
@@ -23,7 +23,7 @@ class Player extends THREE.Object3D {
                 this.ship = mesh;
                 this.ship.castShadow    = true;
                 this.ship.receiveShadow = true;
-                this.ship.scale.set(scale, scale, scale);
+                this.ship.geometry.scale(scale, scale, scale);
                 this.add(this.ship);
 
                 this.ship.geometry.computeBoundingBox();
@@ -33,14 +33,13 @@ class Player extends THREE.Object3D {
                     Math.abs(shipBoundingBox.max.y) + Math.abs(shipBoundingBox.min.y),
                     Math.abs(shipBoundingBox.max.z) + Math.abs(shipBoundingBox.min.z)
                 );
-                dimensions.multiplyScalar(scale);
 
                 let boundingBoxGeometry = new THREE.BoxGeometry(
                     dimensions.x, dimensions.y, dimensions.z,
                     //4, 4, 12
                     1, 1, 1
                 );
-                let boundingBoxMaterial = new THREE.MeshBasicMaterial({ color: 0xff00ff, visible: false });
+                let boundingBoxMaterial = new THREE.MeshBasicMaterial({ color: 0xff00ff, visible: true, wireframe: true });
                 this.boundingBox = new THREE.Mesh(boundingBoxGeometry, boundingBoxMaterial);
                 this.add(this.boundingBox);
             }

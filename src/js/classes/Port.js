@@ -21,10 +21,32 @@ class Port extends THREE.Object3D {
                     let child = mesh.children[i].clone();
                     child.castShadow    = true;
                     child.receiveShadow = true;
-                    child.scale.set(scale, scale, scale);
+
+                    child.geometry.scale(scale, scale, scale);
                     
                     // Calculate bounding boxes for geometries
                     child.geometry.computeBoundingBox();
+                    let boundingBox = child.geometry.boundingBox;
+                    let dimensions = new THREE.Vector3(
+                        boundingBox.max.x - boundingBox.min.x,
+                        boundingBox.max.y - boundingBox.min.y,
+                        boundingBox.max.z - boundingBox.min.z
+                    );
+    
+                    let boundingBoxGeometry = new THREE.BoxGeometry(
+                        dimensions.x, dimensions.y, dimensions.z,
+                        //4, 4, 12
+                        1, 1, 1
+                    );
+                    let boundingBoxMaterial = new THREE.MeshBasicMaterial({ color: 0xff00ff, visible: true, wireframe: true });
+                    let boundingBoxMesh     = new THREE.Mesh(boundingBoxGeometry, boundingBoxMaterial);
+                    boundingBoxMesh.position.set(
+                        (boundingBox.min.x + boundingBox.max.x) / 2,
+                        (boundingBox.min.y + boundingBox.max.y) / 2,
+                        (boundingBox.min.z + boundingBox.max.z) / 2
+                    );
+                    this.add(boundingBoxMesh);
+
 
                     // Apply material to houses
                     if(child.name == 'Houses') {
@@ -53,7 +75,7 @@ class Port extends THREE.Object3D {
                     this.add(child);
                 }
 
-                this.game.addCubes();
+                //this.game.addCubes();
             }
         );
 
@@ -75,6 +97,10 @@ class Port extends THREE.Object3D {
         );
 
         this.rotateY(-Math.PI / 2);
+    }
+
+    update(dt) {
+        
     }
 }
 

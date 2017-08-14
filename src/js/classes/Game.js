@@ -120,17 +120,17 @@ class Game {
 
         this.waterSurface.update(dt);
         this.waterTrail.update(dt);
+        this.port.update(dt);
     }
 
     addCubes() {
         let mat = new THREE.MeshBasicMaterial({ color: 0xff00ff });
-        let geo = new THREE.CubeGeometry(5, 100, 5, 1, 1, 1, 1);
+        let geo = new THREE.CubeGeometry(1, 1000, 1, 1, 1, 1, 1);
 
         for(let i = 0; i < this.port.children.length; i++) {
             let child = this.port.children[i];
             let c  = new THREE.Mesh(geo, mat);
-            console.log(child.position);
-            c.position.set(child.position.x, child.position.y, child.position.z);
+            c.position.set(child.geometry.boundingBox.min.x, 0, child.geometry.boundingBox.max.z);
             this.scene.add(c);
         }
     }
@@ -150,18 +150,21 @@ class Game {
             if(this.isRecording) {
                 console.log('Start recording');
                 this.stream = this.renderer.domElement.captureStream();
+                console.log(this.stream);
                 this.recordedBlobs = [];
 
-                let options = { mimeType: 'video/webm' };
+                let options = { mimeType: 'video/webm', videoBitsPerSecond: 4000e3 };
                 try {
                     this.mediaRecorder = new MediaRecorder(this.stream, options);
 
                     this.mediaRecorder.ondataavailable = (event) => {
                         if (event.data && event.data.size > 0) {
                             this.recordedBlobs.push(event.data);
+                            this.debug(this.recordedBlobs.length);
                         }
                     };
                     this.mediaRecorder.start(100); // collect 100ms of data
+                    console.log(this.mediaRecorder);
                 } catch(e) {
                     console.warn('Unable to create MediaRecorder with options Object: ', e);
                 }
