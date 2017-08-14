@@ -12,6 +12,8 @@ class Player extends THREE.Object3D {
 
         this.game = game;
 
+        this.enableBop = false;
+
         let scale = 15;
 
         let loader = new THREE.ObjectLoader();
@@ -75,21 +77,25 @@ class Player extends THREE.Object3D {
         this.position.z += this.acceleration.z;
 
         // Bop around in the water
-        this.position.y = -0.5 * Math.sin(2 * this.game.runTime) + 1.5 * Math.sin(3 * this.game.runTime) + 0.5;
-        this.rotation.z = Math.sin(1.5 * this.game.runTime) * 0.1;
+        if(this.enableBop) {
+            this.position.y = -0.5 * Math.sin(2 * this.game.runTime) + 1.5 * Math.sin(3 * this.game.runTime) + 0.5;
+            this.rotation.z = Math.sin(1.5 * this.game.runTime) * 0.1;
 
-        let rot = this.acceleration.x + this.acceleration.z;
-        let maxAngle = 5;
-        this.rotation.x += rot * Math.PI / 180;
-        if(this.rotation.x >= maxAngle * Math.PI / 180) {
-            this.rotation.x = maxAngle * Math.PI / 180;
-        } else if(this.rotation.x <= -maxAngle * Math.PI / 180) {
-            this.rotation.x = -maxAngle * Math.PI / 180;
+            let rot = this.acceleration.x + this.acceleration.z;
+            let maxAngle = 5;
+            this.rotation.x += rot * Math.PI / 180;
+            if(this.rotation.x >= maxAngle * Math.PI / 180) {
+                this.rotation.x = maxAngle * Math.PI / 180;
+            } else if(this.rotation.x <= -maxAngle * Math.PI / 180) {
+                this.rotation.x = -maxAngle * Math.PI / 180;
+            }
         }
 
         this.rotation.x *= 0.99;
 
         this.acceleration.multiplyScalar(0.99);
+
+        if(this.acceleration.length() <= 0.01) this.acceleration.multiplyScalar(0.0);
     }
 
     checkForCollision() {
@@ -97,28 +103,20 @@ class Player extends THREE.Object3D {
 
         for (let index = 0; index < this.boundingBox.geometry.vertices.length; index++) {
             let localVertex     = this.boundingBox.geometry.vertices[index].clone();
-            let globalVertex    = localVertex.applyMatrix4(this.matrix);
-            let directionVector = globalVertex.sub(this.position);
+            let directionVector = new THREE.Vector3().subVectors(localVertex, this.position);
 
-            if(localVertex.length() != globalVertex.length())
-                console.log(localVertex, globalVertex);
-        
             this.raycaster.set(localVertex, directionVector.clone().normalize());
-
-            for(let i = 0; i < this.game.port.children.length; i++) {
-                let result = this.raycaster.intersectObjects(this.game.port.children);
-                if(result == null) continue;
-                //console.log(result);
-                
-                if (result.length > 0 && result[0].distance < directionVector.length()) {
-                    if(first) {
-                        first = false;
-                        console.log(localVertex);
-                        console.log(directionVector.length());
-                        console.log(result);
-                    }
-                    return true;
+            let result = this.raycaster.intersectObjects(this.game.port.children);
+            if(result == null) continue;
+            
+            if (result.length > 0 && result[0].distance < directionVector.length()) {
+                if(first) {
+                    first = false;
+                    console.log(localVertex);
+                    console.log(directionVector.length());
+                    console.log(result);
                 }
+                return true;
             }
         }
 

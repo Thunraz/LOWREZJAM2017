@@ -122,6 +122,19 @@ class Game {
         this.waterTrail.update(dt);
     }
 
+    addCubes() {
+        let mat = new THREE.MeshBasicMaterial({ color: 0xff00ff });
+        let geo = new THREE.CubeGeometry(5, 100, 5, 1, 1, 1, 1);
+
+        for(let i = 0; i < this.port.children.length; i++) {
+            let child = this.port.children[i];
+            let c  = new THREE.Mesh(geo, mat);
+            console.log(child.position);
+            c.position.set(child.position.x, child.position.y, child.position.z);
+            this.scene.add(c);
+        }
+    }
+
     debug(text) {
         if(typeof(text) == 'object') {
             text = JSON.stringify(text);

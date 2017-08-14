@@ -52,6 +52,8 @@ class Port extends THREE.Object3D {
                     }
                     this.add(child);
                 }
+
+                this.game.addCubes();
             }
         );
 
