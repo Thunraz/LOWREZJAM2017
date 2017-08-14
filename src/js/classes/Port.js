@@ -16,37 +16,41 @@ class Port extends THREE.Object3D {
         loader.load(
             'assets/models/port.json',
             (mesh) => {
-                this.port = mesh;
-                this.port.castShadow    = true;
-                this.port.receiveShadow = true;
-                this.port.scale.set(scale, scale, scale);
-                this.add(this.port);
                 
-                for(let i = 0; i < this.port.children.length; i++) {
-                    if(this.port.children[i].name == 'Houses') {
-                        let houses = this.port.children[i];
-                        for(let j = 0; j < houses.material.length; j++) {
-                            if(houses.material[j].name == 'Walls') {
-                                houses.material[j] = new THREE.MeshStandardMaterial({ color: 0x8c001a });
-                                houses.material[j].name = 'Walls';
-                            } else if(houses.material[j].name == 'Roofs') {
-                                houses.material[j] = new THREE.MeshStandardMaterial({ color: 0x333333 });
-                                houses.material[j].name = 'Roofs';
-                            } else if(houses.material[j].name == 'Hook') {
-                                houses.material[j] = new THREE.MeshStandardMaterial({ color: 0xdddddd });
-                                houses.material[j].name = 'Hook';
-                            } else if(houses.material[j].name == 'Dark') {
-                                houses.material[j] = new THREE.MeshStandardMaterial({ color: 0x0 });
-                                houses.material[j].name = 'Dark';
-                            } else if(houses.material[j].name == 'Ground') {
-                                houses.material[j] = new THREE.MeshStandardMaterial({ color: 0xd86f1c });
-                                houses.material[j].name = 'Ground';
-                            } else if(houses.material[j].name == 'Doors') {
-                                houses.material[j] = new THREE.MeshStandardMaterial({ color: 0x6f7ad5 });
-                                houses.material[j].name = 'Doors';
+                for(let i = 0; i < mesh.children.length; i++) {
+                    let child = mesh.children[i].clone();
+                    child.castShadow    = true;
+                    child.receiveShadow = true;
+                    child.scale.set(scale, scale, scale);
+                    
+                    // Calculate bounding boxes for geometries
+                    child.geometry.computeBoundingBox();
+
+                    // Apply material to houses
+                    if(child.name == 'Houses') {
+                        for(let j = 0; j < child.material.length; j++) {
+                            if(child.material[j].name == 'Walls') {
+                                child.material[j] = new THREE.MeshStandardMaterial({ color: 0x8c001a });
+                                child.material[j].name = 'Walls';
+                            } else if(child.material[j].name == 'Roofs') {
+                                child.material[j] = new THREE.MeshStandardMaterial({ color: 0x333333 });
+                                child.material[j].name = 'Roofs';
+                            } else if(child.material[j].name == 'Hook') {
+                                child.material[j] = new THREE.MeshStandardMaterial({ color: 0xdddddd });
+                                child.material[j].name = 'Hook';
+                            } else if(child.material[j].name == 'Dark') {
+                                child.material[j] = new THREE.MeshStandardMaterial({ color: 0x0 });
+                                child.material[j].name = 'Dark';
+                            } else if(child.material[j].name == 'Ground') {
+                                child.material[j] = new THREE.MeshStandardMaterial({ color: 0xd86f1c });
+                                child.material[j].name = 'Ground';
+                            } else if(child.material[j].name == 'Doors') {
+                                child.material[j] = new THREE.MeshStandardMaterial({ color: 0x6f7ad5 });
+                                child.material[j].name = 'Doors';
                             }
                         }
                     }
+                    this.add(child);
                 }
             }
         );
@@ -54,15 +58,17 @@ class Port extends THREE.Object3D {
         loader.load(
             'assets/models/island.json',
             (mesh) => {
-                this.island = mesh;
-                this.island.castShadow    = true;
-                this.island.receiveShadow = true;
-                this.island.scale.set(scale, scale, scale);
-                this.island.material = new THREE.MeshStandardMaterial({
+                let island = mesh.clone();
+                island.castShadow    = true;
+                island.receiveShadow = true;
+                island.scale.set(scale, scale, scale);
+                
+                island.material = new THREE.MeshStandardMaterial({
                     name: 'Sand',
                     color: 0x336699
                 });
-                this.add(this.island);
+                
+                this.add(island);
             }
         );
 

@@ -21,19 +21,6 @@ class Game {
 
         this.scene = new THREE.Scene();
 
-        this.camera = new THREE.PerspectiveCamera(75, this.ratio, 0.1, 20000);
-        this.camera.name = 'main cam';
-        this.camera.position.set(GP.CameraOffset.x, GP.CameraOffset.y, GP.CameraOffset.z);
-        this.camera.lookAt(new THREE.Vector3(0))
-
-        this.renderer = new THREE.WebGLRenderer({ antialias: true });
-        this.renderer.setPixelRatio(window.devicePixelRatio);
-        this.renderer.setSize(GP.GameSize, GP.GameSize);
-        this.renderer.shadowMap.enabled = true;
-        this.renderer.shadowMap.type    = THREE.PCFShadowMap; 
-        this.gameContainer.appendChild(this.renderer.domElement);
-        this.renderer.domElement.style = null;
-
         this.waterSurface = new WaterSurface(this);
         this.scene.add(this.waterSurface);
 
@@ -44,6 +31,7 @@ class Game {
         this.scene.add(this.waterTrail);
 
         this.port = new Port(this);
+        this.port.position.set(-100, 0, 0);
         this.scene.add(this.port);
 
         this.sun = new THREE.DirectionalLight(0xffffff, .5);
@@ -65,6 +53,19 @@ class Game {
         this.runTime = 0.0;
         this.buttonTimeout = 0.0;
         this.isRecording = false;
+        
+        this.camera = new THREE.PerspectiveCamera(75, this.ratio, 0.1, 20000);
+        this.camera.name = 'main cam';
+        this.camera.position.set(GP.CameraOffset.x, GP.CameraOffset.y, GP.CameraOffset.z);
+        this.camera.lookAt(new THREE.Vector3(0))
+
+        this.renderer = new THREE.WebGLRenderer({ antialias: true });
+        this.renderer.setPixelRatio(window.devicePixelRatio);
+        this.renderer.setSize(GP.GameSize, GP.GameSize);
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type    = THREE.PCFShadowMap; 
+        this.gameContainer.appendChild(this.renderer.domElement);
+        this.renderer.domElement.style = null;
     }
     
     /**
