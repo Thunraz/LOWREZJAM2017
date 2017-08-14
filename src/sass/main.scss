@@ -29,6 +29,8 @@ body, html {
         z-index: 9;
         font-family: 'Fira Code';
         white-space: pre;
+        color: white;
+        mix-blend-mode: hard-light;
     }
 
     canvas {
