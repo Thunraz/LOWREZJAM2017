@@ -20,8 +20,19 @@ body, html {
 #g {
     width:  90vmin;
     height: 90vmin;
+    position: relative;
+
+    #d {
+        width:  90vmin;
+        height: 90vmin;
+        position: absolute;
+        z-index: 9;
+        font-family: 'Fira Code';
+        white-space: pre;
+    }
 
     canvas {
+        position: absolute;
         width:  100%;
         height: 100%;
         margin: 0;
