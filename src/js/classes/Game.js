@@ -19,6 +19,8 @@ class Game {
         this.width  = rect.width;
         this.height = rect.height;
 
+        this.debugElement = document.getElementById('d');
+
         this.scene = new THREE.Scene();
 
         this.waterSurface = new WaterSurface(this);
@@ -82,6 +84,8 @@ class Game {
      * @returns {void}
      */
     update(dt) {
+        this.debugElement.innerText = '';
+
         this.runTime += dt;
 
         if(this.buttonTimeout >= 0.0) {
@@ -116,6 +120,13 @@ class Game {
 
         this.waterSurface.update(dt);
         this.waterTrail.update(dt);
+    }
+
+    debug(text) {
+        if(typeof(text) == 'object') {
+            text = JSON.stringify(text);
+        }
+        this.debugElement.innerHTML += text + '\n';
     }
 
     handleControls(states, dt) {
