@@ -18,6 +18,11 @@ class Game {
         let rect = this.gameContainer.getBoundingClientRect();
         this.width  = rect.width;
         this.height = rect.height;
+        
+        this.frames = 0;
+        this.runTime = 0.0;
+        this.buttonTimeout = 0.0;
+        this.isRecording = false;
 
         this.debugElement = document.getElementById('d');
 
@@ -51,10 +56,6 @@ class Game {
 
         let hemiLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
         this.scene.add(hemiLight);
-
-        this.runTime = 0.0;
-        this.buttonTimeout = 0.0;
-        this.isRecording = false;
         
         this.camera = new THREE.PerspectiveCamera(75, this.ratio, 0.1, 20000);
         this.camera.name = 'main cam';
@@ -87,6 +88,7 @@ class Game {
         this.debugElement.innerText = '';
 
         this.runTime += dt;
+        this.frames++;
 
         if(this.buttonTimeout >= 0.0) {
             this.buttonTimeout -= dt;
