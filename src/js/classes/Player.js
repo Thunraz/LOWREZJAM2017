@@ -66,7 +66,7 @@ class Player extends THREE.Object3D {
         lineGeometry.addAttribute('color', new THREE.BufferAttribute(new Float32Array([]), 3));
 
         this.line = new THREE.Line(lineGeometry, lineMaterial);
-        this.add(this.line);
+        this.game.scene.add(this.line);
     }
 
     update(dt) {
@@ -74,10 +74,10 @@ class Player extends THREE.Object3D {
         this.handleControls(this.game.controls.states, dt);
 
         if(this.checkForCollision()) {
-            let factor = -0.5;
+            let factor = -0.9;
             console.log('collision');
-            //this.acceleration.x = this.acceleration.x * factor;
-            //this.acceleration.z = this.acceleration.z * factor;
+            this.acceleration.x = this.acceleration.x * factor;
+            this.acceleration.z = this.acceleration.z * factor;
         }
 
         this.position.x += this.acceleration.x;
@@ -105,24 +105,18 @@ class Player extends THREE.Object3D {
     }
 
     checkForCollision() {
-        let first = true;
-
         let boundingBoxes = this.game.port.children.filter((cur) => {
             return cur.name.startsWith('bounding_box_');
         });
-        
-        this.game.debug(this.position);
 
         for (let index = 0; index < this.boundingBox.geometry.vertices.length; index++) {
-            let localVertex     = this.boundingBox.geometry.vertices[index].clone();
-            localVertex.add(this.position);
+            let localVertex = this.boundingBox.geometry.vertices[index].clone();
             let directionVector = localVertex.clone();
-            directionVector.sub(this.position);
+            localVertex = this.localToWorld(localVertex);
 
             if(index == 0) {
-                this.game.debug(localVertex);
                 let vertices = new Float32Array([
-                    this.position.x, 50, this.position.z,
+                    this.position.x, this.position.y, this.position.z,
                     directionVector.x, directionVector.y, directionVector.z
                 ]);
                 let colors = new Float32Array([
@@ -134,17 +128,13 @@ class Player extends THREE.Object3D {
                 this.line.geometry.addAttribute('color',    new THREE.BufferAttribute(colors, 3));
             }
 
-            this.raycaster.set(localVertex, directionVector.clone().normalize());
+            this.raycaster.set(this.position, directionVector);
             let result = this.raycaster.intersectObjects(boundingBoxes);
             if(result == null) continue;
             
-            if (result.length > 0 && result[0].distance < directionVector.length()) {
-                if(first) {
-                    first = false;
-                    console.log(localVertex);
-                    console.log(directionVector.length());
-                    console.log(result);
-                }
+            if (result.length > 0/* && result[0].distance < directionVector.length()*/) {
+                console.log(result);
+                this.game.debug(result[0].distance);
                 return true;
             }
         }
