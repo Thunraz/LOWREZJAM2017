@@ -37,7 +37,7 @@ class Game {
         this.waterTrail = new WaterTrail(this);
         this.scene.add(this.waterTrail);
 
-        this.port = new Port(this);
+        this.port = new Port(this, true);
         this.port.position.set(-100, 0, 0);
         this.scene.add(this.port);
 
@@ -123,18 +123,6 @@ class Game {
         this.waterSurface.update(dt);
         this.waterTrail.update(dt);
         this.port.update(dt);
-    }
-
-    addCubes() {
-        let mat = new THREE.MeshBasicMaterial({ color: 0xff00ff });
-        let geo = new THREE.CubeGeometry(1, 1000, 1, 1, 1, 1, 1);
-
-        for(let i = 0; i < this.port.children.length; i++) {
-            let child = this.port.children[i];
-            let c  = new THREE.Mesh(geo, mat);
-            c.position.set(child.geometry.boundingBox.min.x, 0, child.geometry.boundingBox.max.z);
-            this.scene.add(c);
-        }
     }
 
     debug(text) {
