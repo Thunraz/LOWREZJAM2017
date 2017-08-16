@@ -50,7 +50,7 @@ class WaterTrail extends THREE.Object3D {
                 ];
 
                 for(let i = 1; i < this.playerPositions.length; i++) {
-                    let y = Math.pow(i, 2) / Math.pow(this.playerPositions.length, 2) - 0.5;
+                    let y = Math.pow(-Math.E, i - this.playerPositions.length) + 0.5;
 
                     let point    = this.playerPositions[i - 1].pos;
                     let rotAngle = this.playerPositions[i - 1].angle;
