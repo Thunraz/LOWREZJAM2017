@@ -1,15 +1,15 @@
 {
-  "name": "lowrezjam-2017",
-  "description": "My game for #LOWREZJAM 2017",
+  "name": "make-sail",
+  "description": "You've got a sail boat",
   "version": "1.0.0",
   "author": "Thunraz <thunraz@thunraz.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Thunraz/LOWREZJAM2017.git"
+    "url": "git+https://github.com/Thunraz/make-sail.git"
   },
   "bugs": {
-    "url": "https://github.com/Thunraz/LOWREZJAM2017/issues"
+    "url": "https://github.com/Thunraz/make-sail/issues"
   },
   "scripts": {
     "build": "gulp",
