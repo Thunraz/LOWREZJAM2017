@@ -18,6 +18,11 @@ class Game {
         let rect = this.gameContainer.getBoundingClientRect();
         this.width  = rect.width;
         this.height = rect.height;
+        
+        this.frames = 0;
+        this.runTime = 0.0;
+        this.buttonTimeout = 0.0;
+        this.isRecording = false;
 
         this.debugElement = document.getElementById('d');
 
@@ -32,7 +37,7 @@ class Game {
         this.waterTrail = new WaterTrail(this);
         this.scene.add(this.waterTrail);
 
-        this.port = new Port(this);
+        this.port = new Port(this, true);
         this.port.position.set(-100, 0, 0);
         this.scene.add(this.port);
 
@@ -51,10 +56,6 @@ class Game {
 
         let hemiLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
         this.scene.add(hemiLight);
-
-        this.runTime = 0.0;
-        this.buttonTimeout = 0.0;
-        this.isRecording = false;
         
         this.camera = new THREE.PerspectiveCamera(75, this.ratio, 0.1, 20000);
         this.camera.name = 'main cam';
@@ -87,6 +88,7 @@ class Game {
         this.debugElement.innerText = '';
 
         this.runTime += dt;
+        this.frames++;
 
         if(this.buttonTimeout >= 0.0) {
             this.buttonTimeout -= dt;
@@ -121,18 +123,6 @@ class Game {
         this.waterSurface.update(dt);
         this.waterTrail.update(dt);
         this.port.update(dt);
-    }
-
-    addCubes() {
-        let mat = new THREE.MeshBasicMaterial({ color: 0xff00ff });
-        let geo = new THREE.CubeGeometry(1, 1000, 1, 1, 1, 1, 1);
-
-        for(let i = 0; i < this.port.children.length; i++) {
-            let child = this.port.children[i];
-            let c  = new THREE.Mesh(geo, mat);
-            c.position.set(child.geometry.boundingBox.min.x, 0, child.geometry.boundingBox.max.z);
-            this.scene.add(c);
-        }
     }
 
     debug(text) {

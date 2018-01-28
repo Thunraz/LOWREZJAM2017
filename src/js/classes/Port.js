@@ -4,11 +4,14 @@ class Port extends THREE.Object3D {
     /**
      * Loads port mesh
      * @param {Game} game Game instance
+     * @param {bool} showBoundingBox Draw the bounding box if true
      */
-    constructor(game) {
+    constructor(game, showBoundingBox) {
         super();
 
         this.game = game;
+
+        this.showBoundingBox = showBoundingBox || false;
 
         let scale = 15;
 
@@ -16,7 +19,6 @@ class Port extends THREE.Object3D {
         loader.load(
             'assets/models/port.json',
             (mesh) => {
-                
                 for(let i = 0; i < mesh.children.length; i++) {
                     let child = mesh.children[i].clone();
                     child.castShadow    = true;
@@ -38,16 +40,19 @@ class Port extends THREE.Object3D {
                         //4, 4, 12
                         1, 1, 1
                     );
-                    let boundingBoxMaterial = new THREE.MeshBasicMaterial({ color: 0xff00ff, visible: true, wireframe: true });
+                    let boundingBoxMaterial = new THREE.MeshBasicMaterial({
+                        color: 0xff00ff,
+                        visible: this.showBoundingBox,
+                        wireframe: true
+                    });
                     let boundingBoxMesh     = new THREE.Mesh(boundingBoxGeometry, boundingBoxMaterial);
                     boundingBoxMesh.position.set(
                         (boundingBox.min.x + boundingBox.max.x) / 2,
                         (boundingBox.min.y + boundingBox.max.y) / 2,
                         (boundingBox.min.z + boundingBox.max.z) / 2
                     );
-                    boundingBoxMesh.name = 'bounding_box_' + i;
+                    boundingBoxMesh.name = 'bounding_box_' + child.name;
                     this.add(boundingBoxMesh);
-
 
                     // Apply material to houses
                     if(child.name == 'Houses') {
@@ -75,8 +80,6 @@ class Port extends THREE.Object3D {
                     }
                     this.add(child);
                 }
-
-                //this.game.addCubes();
             }
         );
 
@@ -96,12 +99,10 @@ class Port extends THREE.Object3D {
                 this.add(island);
             }
         );
-
-        this.rotateY(-Math.PI / 2);
     }
 
     update(dt) {
-
+        
     }
 }
 
