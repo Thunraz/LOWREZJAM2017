@@ -1,6 +1,8 @@
 @import 'reset.scss';
 
 body, html {
+    background-color: rgb(39, 40, 34);
+
     margin:  0;
     padding: 0;
     overflow: hidden;
@@ -18,8 +20,8 @@ body, html {
 }
 
 #g {
-    width:  90vmin;
-    height: 90vmin;
+    width:  30vmin;
+    height: 30vmin;
     position: relative;
 
     #d {
