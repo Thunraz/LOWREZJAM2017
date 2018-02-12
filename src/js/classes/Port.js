@@ -28,31 +28,7 @@ class Port extends THREE.Object3D {
                     
                     // Calculate bounding boxes for geometries
                     child.geometry.computeBoundingBox();
-                    let boundingBox = child.geometry.boundingBox;
-                    let dimensions = new THREE.Vector3(
-                        boundingBox.max.x - boundingBox.min.x,
-                        boundingBox.max.y - boundingBox.min.y,
-                        boundingBox.max.z - boundingBox.min.z
-                    );
-    
-                    let boundingBoxGeometry = new THREE.BoxGeometry(
-                        dimensions.x, dimensions.y, dimensions.z,
-                        //4, 4, 12
-                        1, 1, 1
-                    );
-                    let boundingBoxMaterial = new THREE.MeshBasicMaterial({
-                        color: 0xff00ff,
-                        visible: this.showBoundingBox,
-                        wireframe: true
-                    });
-                    let boundingBoxMesh     = new THREE.Mesh(boundingBoxGeometry, boundingBoxMaterial);
-                    boundingBoxMesh.position.set(
-                        (boundingBox.min.x + boundingBox.max.x) / 2,
-                        (boundingBox.min.y + boundingBox.max.y) / 2,
-                        (boundingBox.min.z + boundingBox.max.z) / 2
-                    );
-                    boundingBoxMesh.name = 'bounding_box_' + child.name;
-                    this.add(boundingBoxMesh);
+                    //this.createBoundingBox(child);
 
                     // Apply material to houses
                     if(child.name == 'Houses') {
@@ -89,7 +65,9 @@ class Port extends THREE.Object3D {
                 let island = mesh.clone();
                 island.castShadow    = true;
                 island.receiveShadow = true;
-                island.scale.set(scale, scale, scale);
+                //island.scale.set(scale, scale, scale);
+                
+                this.createBoundingBox(mesh);
                 
                 island.material = new THREE.MeshStandardMaterial({
                     name: 'Sand',
@@ -103,6 +81,36 @@ class Port extends THREE.Object3D {
 
     update(dt) {
         
+    }
+
+    createBoundingBox(mesh) {
+        mesh.geometry.computeBoundingBox();
+        let boundingBox = mesh.geometry.boundingBox;
+        let dimensions = new THREE.Vector3(
+            boundingBox.max.x - boundingBox.min.x,
+            boundingBox.max.y - boundingBox.min.y,
+            boundingBox.max.z - boundingBox.min.z
+        );
+
+        let boundingBoxGeometry = new THREE.BoxGeometry(
+            dimensions.x, dimensions.y, dimensions.z,
+            1, 1, 1
+        );
+        let boundingBoxMaterial = new THREE.MeshBasicMaterial({
+            color: 0xff00ff,
+            visible: this.showBoundingBox,
+            wireframe: true
+        });
+        let boundingBoxMesh     = new THREE.Mesh(boundingBoxGeometry, boundingBoxMaterial);
+        boundingBoxMesh.position.set(
+            (boundingBox.min.x + boundingBox.max.x) / 2,
+            (boundingBox.min.y + boundingBox.max.y) / 2,
+            (boundingBox.min.z + boundingBox.max.z) / 2
+        );
+        boundingBoxMesh.name = 'bounding_box_' + mesh.name;
+
+        console.log(boundingBoxMesh);
+        this.add(boundingBoxMesh);
     }
 }
 

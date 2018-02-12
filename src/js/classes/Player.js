@@ -134,15 +134,9 @@ class Player extends THREE.Object3D {
             for(let i = 0; i < portChildren.length; i++) {
                 if(portChildren[i].name == 'Island_1') continue;
 
-                let min = portChildren[i].geometry.boundingBox.min.clone();
-                let max = portChildren[i].geometry.boundingBox.max.clone();
-
-                min = this.game.port.localToWorld(min);
-                max = this.game.port.localToWorld(max);
-
-                let result = ray.intersectBox(new THREE.Box3(min, max));
+                let result = ray.intersectBox(portChildren[i].geometry.boundingBox);
                 if(result != null && result.length() <= directionVector.length()) {
-                    //console.log(portChildren[i].name, portChildren[i].geometry.boundingBox);
+                    console.log(portChildren[i].name, portChildren[i].geometry.boundingBox);
                     return true;
                 }
             }
