@@ -54,6 +54,7 @@ class Player extends THREE.Object3D {
                 this.add(this.sails);
             }
         );
+        
 
         this.acceleration = new THREE.Vector3();
         this.numFrames = 0;
