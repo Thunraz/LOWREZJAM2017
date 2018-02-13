@@ -9,6 +9,7 @@ import WaterTrail   from './WaterTrail.js';
 class Game {
     /**
      * Initialize the game
+     * @param {Controls} controls the control handler instance
      */
     constructor(controls) {
         this.controls = controls;
