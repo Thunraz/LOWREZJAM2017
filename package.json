@@ -24,8 +24,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
     "pug": "^2.0.0-rc.3",
-    "rollup": "^0.42.0",
-    "st": "^1.2.0"
+    "rollup": "^0.42.0"
   },
   "dependencies": {
     "three": "^0.86.0"

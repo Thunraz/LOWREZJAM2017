@@ -2,9 +2,7 @@
 
 let browserSync = require('browser-sync').create(),
     gulp       = require('gulp'),
-    http       = require('http'),
-    path       = require('path'),
-    st         = require('st');
+    path       = require('path');
 
 module.exports = () => {
     gulp.task('watch', ['server'], () => {
@@ -25,12 +23,4 @@ module.exports = () => {
     gulp.task('reload-browser', function() {
         browserSync.reload();
     });
-
-    /*gulp.task('server', (done) => {
-        let port = process.env.GULP_PORT || 8080;
-        
-        http.createServer(
-            st({ path: path.join(__dirname, '..', 'dist'), index: 'index.html', cache: false })
-        ).listen(port, done);
-    });*/
 };
