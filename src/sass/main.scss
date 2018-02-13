@@ -22,22 +22,23 @@ body, html {
     align-items: center;     /* center items horizontally, in this case */
 }
 
+#d {
+    width:  100vw;
+    height: 100vh;
+    position: absolute;
+    
+    z-index: 9;
+    font-family: 'Fira Code';
+    font-size: 1vmin;
+    white-space: pre;
+    color: white;
+    mix-blend-mode: hard-light;
+}
+
 #g {
     width:  $game-width;
     height: $game-height;
     position: relative;
-
-    #d {
-        width:  $game-width;
-        height: $game-height;
-        position: absolute;
-        z-index: 9;
-        font-family: 'Fira Code';
-        font-size: 1vmin;
-        white-space: pre;
-        color: white;
-        mix-blend-mode: hard-light;
-    }
 
     canvas {
         position: absolute;
