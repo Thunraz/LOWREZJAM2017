@@ -1,5 +1,8 @@
 @import 'reset.scss';
 
+$game-width:  30vmin;
+$game-height: 30vmin;
+
 body, html {
     background-color: rgb(39, 40, 34);
 
@@ -20,16 +23,17 @@ body, html {
 }
 
 #g {
-    width:  30vmin;
-    height: 30vmin;
+    width:  $game-width;
+    height: $game-height;
     position: relative;
 
     #d {
-        width:  90vmin;
-        height: 90vmin;
+        width:  $game-width;
+        height: $game-height;
         position: absolute;
         z-index: 9;
         font-family: 'Fira Code';
+        font-size: 1vmin;
         white-space: pre;
         color: white;
         mix-blend-mode: hard-light;
