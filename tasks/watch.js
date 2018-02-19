@@ -16,7 +16,8 @@ module.exports = () => {
         browserSync.init({
             server: {
                 baseDir: path.join(__dirname, '..', 'dist')
-            }
+            },
+            open: false
         });
     });
 
