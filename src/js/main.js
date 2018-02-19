@@ -29,4 +29,6 @@ function gameLoop(currentFrameTime) {
     frameCounter++;
 }
 
+// eslint-disable-next-line no-console
+console.log('⛵ Welcome to make-sail! 🌊');
 gameLoop();
