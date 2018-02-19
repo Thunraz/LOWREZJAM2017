@@ -31,4 +31,11 @@ function gameLoop(currentFrameTime) {
 
 // eslint-disable-next-line no-console
 console.log('⛵ Welcome to make-sail! 🌊');
+
+let worker = new Worker('./worker.js');
+worker.postMessage = worker.webkitPostMessage || worker.postMessage;
+worker.postMessage({
+    oimoUrl: './oimo.min.js'
+});
+
 gameLoop();

@@ -10,7 +10,9 @@ module.exports = () => {
     gulp.task('copy-dependencies', () => {
         return gulp
             .src([
-                './node_modules/three/build/three.js'
+                './node_modules/three/build/three.js',
+                './node_modules/oimo/build/oimo.min.js',
+                './src/js/worker.js'
             ])
             .pipe(gulp.dest('./dist/'))
     });
@@ -20,16 +22,17 @@ module.exports = () => {
             input: 'src/js/main.js',
             cache: cache,
             external: ['three']
-        }).then(function(bundle) {
-            return bundle.write({
-                file:  'dist/main.js',
-                sourcemap: true,
-                format: 'iife',
-                globals: {
-                    three: 'THREE'
-                }
+        })
+            .then((bundle) => {
+                return bundle.write({
+                    file:  'dist/main.js',
+                    sourcemap: true,
+                    format: 'iife',
+                    globals: {
+                        three: 'THREE'
+                    }
+                });
             });
-        });
     });
 
     gulp.task('lint', () => {

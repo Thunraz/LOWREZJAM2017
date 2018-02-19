@@ -26,6 +26,7 @@
     "rollup": "^0.56.2"
   },
   "dependencies": {
+    "oimo": "^1.0.9",
     "three": "^0.90.0"
   }
 }
