@@ -56,7 +56,7 @@ self.onmessage = function(e) {
 
 function update() {
     // Step the world
-    world.step();
+    /*world.step();
     
     let n;
     body.forEach((b, id) => {
@@ -78,5 +78,5 @@ function update() {
     }
     
     f[2]++;
-    self.postMessage({ perf:fps, minfo:minfo })
+    self.postMessage({ perf:fps, minfo:minfo })*/
 }

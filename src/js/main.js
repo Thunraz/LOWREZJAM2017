@@ -1,3 +1,5 @@
+import * as Stats from 'stats';
+
 import Controls from './classes/Controls.js';
 import Game     from './classes/Game';
 
@@ -8,13 +10,18 @@ let lastFrameTime = 0;
 
 let frameCounter = 0;
 
+let fpsStats = new Stats();
+let upsPanel = fpsStats.addPanel(new Stats.Panel('UPS', '#ff8', '#221'));
+document.body.appendChild(fpsStats.dom);
+
 /**
  * Main game loop
  * @param {number} currentFrameTime Time in seconds
  * @returns {void}
  */
 function gameLoop(currentFrameTime) {
-    requestAnimationFrame(gameLoop);
+    fpsStats.begin();
+
     let deltaT = currentFrameTime - lastFrameTime;
     lastFrameTime = currentFrameTime;
 
@@ -27,6 +34,10 @@ function gameLoop(currentFrameTime) {
     }
 
     frameCounter++;
+
+    fpsStats.end();
+
+    requestAnimationFrame(gameLoop);
 }
 
 // eslint-disable-next-line no-console
@@ -35,7 +46,8 @@ console.log('⛵ Welcome to make-sail! 🌊');
 let worker = new Worker('./worker.js');
 worker.postMessage = worker.webkitPostMessage || worker.postMessage;
 worker.postMessage({
-    oimoUrl: './oimo.min.js'
+    oimoUrl: './oimo.min.js',
+    dt: 1/60
 });
 
 gameLoop();

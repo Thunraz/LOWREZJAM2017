@@ -11,6 +11,7 @@ module.exports = () => {
         return gulp
             .src([
                 './node_modules/three/build/three.js',
+                './node_modules/stats.js/build/stats.min.js',
                 './node_modules/oimo/build/oimo.min.js',
                 './src/js/worker.js'
             ])
@@ -21,7 +22,7 @@ module.exports = () => {
         return rollup({
             input: 'src/js/main.js',
             cache: cache,
-            external: ['three']
+            external: ['three', 'stats']
         })
             .then((bundle) => {
                 return bundle.write({
@@ -29,7 +30,8 @@ module.exports = () => {
                     sourcemap: true,
                     format: 'iife',
                     globals: {
-                        three: 'THREE'
+                        three: 'THREE',
+                        stats: 'Stats'
                     }
                 });
             });
