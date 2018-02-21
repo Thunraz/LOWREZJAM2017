@@ -46,7 +46,7 @@ console.log('⛵ Welcome to make-sail! 🌊');
 let worker = new Worker('./worker.js');
 worker.postMessage = worker.webkitPostMessage || worker.postMessage;
 worker.postMessage({
-    oimoUrl: './oimo.min.js',
+    oimoUrl: './oimo.js',
     dt: 1/60
 });
 

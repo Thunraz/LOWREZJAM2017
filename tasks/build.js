@@ -12,7 +12,7 @@ module.exports = () => {
             .src([
                 './node_modules/three/build/three.js',
                 './node_modules/stats.js/build/stats.min.js',
-                './node_modules/oimo/build/oimo.min.js',
+                './node_modules/oimo/build/oimo.js',
                 './src/js/worker.js'
             ])
             .pipe(gulp.dest('./dist/'))
