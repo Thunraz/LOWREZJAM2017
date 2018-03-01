@@ -65,7 +65,7 @@ class Port extends THREE.Object3D {
                 let island = mesh.clone();
                 island.castShadow    = true;
                 island.receiveShadow = true;
-                //island.scale.set(scale, scale, scale);
+                island.geometry.scale(scale, scale, scale);
                 
                 this.createBoundingBox(mesh);
                 
@@ -108,8 +108,7 @@ class Port extends THREE.Object3D {
             (boundingBox.min.z + boundingBox.max.z) / 2
         );
         boundingBoxMesh.name = 'bounding_box_' + mesh.name;
-
-        console.log(boundingBoxMesh);
+        
         this.add(boundingBoxMesh);
     }
 }
