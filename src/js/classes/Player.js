@@ -74,13 +74,6 @@ class Player extends THREE.Object3D {
         this.numFrames++;
         this.handleControls(this.game.controls.states, dt);
 
-        if(this.checkForCollision()) {
-            let factor = -1.1;
-            console.log('collision');
-            this.acceleration.x = this.acceleration.x * factor;
-            this.acceleration.z = this.acceleration.z * factor;
-        }
-
         this.position.x += this.acceleration.x;
         this.position.z += this.acceleration.z;
 
@@ -103,59 +96,6 @@ class Player extends THREE.Object3D {
 
         this.acceleration.multiplyScalar(0.99);
         if(this.acceleration.length() <= 0.01) this.acceleration.multiplyScalar(0.0);
-    }
-
-    checkForCollision() {
-        let boundingBoxes = this.game.port.children.filter((cur) => {
-            return cur.name.startsWith('bounding_box_');
-        });
-
-        let portChildren = this.game.port.children.filter((cur) => {
-            return !cur.name.startsWith('bounding_');
-        });
-
-        let vertices = [];
-        let colors   = [];
-
-        for(let index = 0; index < this.boundingBox.geometry.vertices.length; index++) {
-            let directionVector = this.localToWorld(this.boundingBox.geometry.vertices[index].clone());
-            let directionNormalized = directionVector.clone().normalize();
-            
-            // Add vertices for the lines
-            colors.push(
-                1.0, 1.0, 0.0,
-                0.0, 1.0, 1.0
-            );
-            vertices.push(
-                this.position.x, this.position.y, this.position.z,
-                directionVector.x, directionVector.y, directionVector.z
-            );
-
-            let ray = new THREE.Ray(this.position, directionVector);
-            for(let i = 0; i < portChildren.length; i++) {
-                if(portChildren[i].name == 'Island_1') continue;
-
-                let result = ray.intersectBox(portChildren[i].geometry.boundingBox);
-                if(result != null && result.length() <= directionVector.length()) {
-                    console.log(portChildren[i].name, portChildren[i].geometry.boundingBox);
-                    return true;
-                }
-            }
-
-            /*this.raycaster.set(this.position, directionVector);
-            let result = this.raycaster.intersectObjects(boundingBoxes);
-            if(result == null) continue;
-            
-            if (result.length > 0 && result[0].distance < directionVector.length()) {
-                console.log(result, result[0].object.name);
-                return true;
-            }*/
-        }
-        this.line.geometry = new THREE.BufferGeometry();
-        this.line.geometry.addAttribute('position', new THREE.BufferAttribute(new Float32Array(vertices), 3));
-        this.line.geometry.addAttribute('color',    new THREE.BufferAttribute(new Float32Array(colors),   3));
-
-        return false;
     }
 
     handleControls(states, dt) {
