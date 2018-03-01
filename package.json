@@ -26,7 +26,6 @@
     "rollup": "^0.56.2"
   },
   "dependencies": {
-    "oimo": "^1.0.9",
     "stats.js": "github:mrdoob/stats.js",
     "three": "^0.90.0"
   }
