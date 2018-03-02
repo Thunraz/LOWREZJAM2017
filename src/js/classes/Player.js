@@ -56,7 +56,9 @@ class Player extends THREE.Object3D {
         );
         
 
-        this.acceleration = new THREE.Vector3();
+        this.velocity     = new THREE.Vector3(0);
+        this.acceleration = new THREE.Vector3(0);
+
         this.numFrames = 0;
 
         let lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, vertexColors: true });
@@ -74,15 +76,18 @@ class Player extends THREE.Object3D {
         this.numFrames++;
         this.handleControls(this.game.controls.states, dt);
 
-        this.position.x += this.acceleration.x;
-        this.position.z += this.acceleration.z;
+        this.velocity.x += this.acceleration.x;
+        this.velocity.z += this.acceleration.z;
+
+        this.position.x += this.velocity.x;
+        this.position.z += this.velocity.z;
 
         // Bop around in the water
         if(this.enableBop) {
             this.position.y = -0.5 * Math.sin(2 * this.game.runTime) + 1.5 * Math.sin(3 * this.game.runTime) + 0.5;
             this.rotation.z = Math.sin(1.5 * this.game.runTime) * 0.1;
 
-            let rot = this.acceleration.x + this.acceleration.z;
+            let rot = this.velocity.x + this.velocity.z;
             let maxAngle = 5;
             this.rotation.x += rot * Math.PI / 180;
             if(this.rotation.x >= maxAngle * Math.PI / 180) {
@@ -94,18 +99,20 @@ class Player extends THREE.Object3D {
 
         this.rotation.x *= 0.99;
 
-        this.acceleration.multiplyScalar(0.99);
-        if(this.acceleration.length() <= 0.01) this.acceleration.multiplyScalar(0.0);
+        this.velocity.multiplyScalar(0.99);
+        if(this.velocity.length() <= 0.01) this.velocity.multiplyScalar(0.0);
+
+        this.acceleration.set(0, 0, 0);
     }
 
     handleControls(states, dt) {
         if(states.up) {
-            this.acceleration.x += -Math.sin(this.rotation.y) * GP.PlayerAcceleration * dt;
-            this.acceleration.z += -Math.cos(this.rotation.y) * GP.PlayerAcceleration * dt;
+            this.acceleration.x = -Math.sin(this.rotation.y) * GP.PlayerAcceleration * dt;
+            this.acceleration.z = -Math.cos(this.rotation.y) * GP.PlayerAcceleration * dt;
         }
         else if(states.down) {
-            this.acceleration.x += Math.sin(this.rotation.y) * GP.PlayerAcceleration * dt;
-            this.acceleration.z += Math.cos(this.rotation.y) * GP.PlayerAcceleration * dt;
+            this.acceleration.x = Math.sin(this.rotation.y) * GP.PlayerAcceleration * dt;
+            this.acceleration.z = Math.cos(this.rotation.y) * GP.PlayerAcceleration * dt;
         }
 
         if(states.left) {
