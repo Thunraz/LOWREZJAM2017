@@ -39,8 +39,8 @@ class Player extends THREE.Object3D {
                     2, 4, 12
                 );
                 let boundingBoxMaterial = new THREE.MeshBasicMaterial({ color: 0xff00ff, visible: true, wireframe: true });
-                this.boundingBox = new THREE.Mesh(boundingBoxGeometry, boundingBoxMaterial);
-                this.add(this.boundingBox);
+                this.collisionMesh = new THREE.Mesh(boundingBoxGeometry, boundingBoxMaterial);
+                this.add(this.collisionMesh);
             }
         );
 

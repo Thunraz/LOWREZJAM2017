@@ -101,7 +101,7 @@ class Game {
         this.handleControls(this.controls.states, dt);
         this.player.update(dt);
 
-        this.checkObjectCollisions(this.player.ship);
+        //this.checkObjectCollisions(this.player);
 
         let playerPositionDelta = oldPlayerPosition.sub(new THREE.Vector3(this.player.position.x, 0, this.player.position.z));
         this.camera.position.sub(playerPositionDelta);
@@ -128,15 +128,22 @@ class Game {
         this.port.update(dt);
     }
 
-    checkObjectCollisions(mesh) {
-        console.log(mesh);
-        for(let vertexIndex = 0; vertexIndex < mesh.geometry.vertices.length; vertexIndex++) {
+    /**
+     * Checks for object collisions.
+     * @param {THREE.Object3D} object The object to act on. Has to have a collisionMesh.
+     * @returns {void}
+     */
+    checkObjectCollisions(object) {
+        let mesh   = object.collisionMesh;
+        let length = mesh.geometry.vertices.length;
+
+        for(let vertexIndex = 0; vertexIndex < length; vertexIndex++) {
             
             let localVertex     = mesh.geometry.vertices[vertexIndex].clone();
             let globalVertex    = localVertex.applyMatrix4(mesh.matrix);
             let directionVector = globalVertex.sub(mesh.position);
             
-            let angle = mesh.velocity.angleTo(directionVector);
+            let angle = object.velocity.angleTo(directionVector);
     
             if(angle <= Math.PI / 2) {
                 this.raycaster.set(mesh.position, directionVector.clone().normalize());
