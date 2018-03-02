@@ -23,9 +23,12 @@ body, html {
 }
 
 #d {
-    width:  100vw;
-    height: 100vh;
+    width:  calc(100vw - 100px);
+    height: calc(100vh - 20px);
     position: absolute;
+    
+    left: 100px;
+    top:  20px;
     
     z-index: 9;
     font-family: 'Fira Code';
