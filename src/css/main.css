@@ -1,8 +1,3 @@
-@import 'reset.scss';
-
-$game-width:  30vmin;
-$game-height: 30vmin;
-
 body, html {
     background-color: rgb(39, 40, 34);
 
@@ -36,19 +31,19 @@ body, html {
 }
 
 #g {
-    width:  $game-width;
-    height: $game-height;
+    width:  30vmin;
+    height: 30vmin;
     position: relative;
+}
 
-    canvas {
-        position: absolute;
-        width:  100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        background-color: #000;
-        image-rendering: pixelated;
-    }
+#g canvas {
+    position: absolute;
+    width:  100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    image-rendering: pixelated;
 }
 
 #blocker {
@@ -58,24 +53,22 @@ body, html {
     z-index:  10;
 
     background-color: rgba(10, 10, 10, 0.75);
+}
 
-    #notice-container {
-        width: 100%;
-        height: 100%;
+#blocker #notice-container {
+    width: 100%;
+    height: 100%;
 
-        display:         flex;
-        align-items:     center;
-        justify-content: center;
+    display:         flex;
+    align-items:     center;
+    justify-content: center;
 
-        color: #fff;
-        text-align: center;
+    color: #fff;
+    text-align: center;
 
-        cursor: pointer;
+    cursor: pointer;
+}
 
-        #notice {
-            h1 {
-                font-size: 2em;
-            }
-        }
-    }
+#notice h1 {
+    font-size: 2em;
 }

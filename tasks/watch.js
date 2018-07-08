@@ -1,27 +1,12 @@
 'use strict';
 
-let browserSync = require('browser-sync').create(),
-    gulp       = require('gulp'),
-    path       = require('path');
+import gulp from 'gulp';
 
-module.exports = () => {
-    gulp.task('watch', ['server'], () => {
-        return gulp.watch(
-            ['src/js/**/*.js', 'src/sass/**/*.s?ss', 'src/index.pug', 'src/assets/*', 'src/assets/**/*'],
-            ['build', 'css', 'template', 'assets', 'reload-browser']
-        );
-    });
+function clearTerminal(done) {
+    process.stdout.write('\x1B[2J\x1B[0f\u001b[0;0H');
+    done();
+}
 
-    gulp.task('server', function() {
-        browserSync.init({
-            server: {
-                baseDir: path.join(__dirname, '..', 'dist')
-            },
-            open: false
-        });
-    });
-
-    gulp.task('reload-browser', function() {
-        browserSync.reload();
-    });
+export default () => {
+    return gulp.watch(['src/*', 'src/**/*'], gulp.series(clearTerminal, 'compile'));
 };

@@ -1,7 +1,6 @@
 'use strict';
 
 let fs   = require('fs'),
-    gulp = require('gulp'),
     pug  = require('pug');
 
 function writeFile(fname, data) {
@@ -26,14 +25,11 @@ function readFile(fname) {
     });
 }
 
-module.exports = () => {
-    gulp.task('template', ['build', 'css'], (done) => {
-        readFile('./src/index.pug')
-            .then((str) => {
-                // development index file
-                let result = pug.compile(str, { filename: './src/index.pug' })();
-                return writeFile('./dist/index.html', result);
-            })
-            .then(done);
-    });
+export default () => {
+    return readFile('./src/index.pug')
+        .then((str) => {
+            // development index file
+            let result = pug.compile(str, { filename: './src/index.pug' })();
+            return writeFile('./dist/index.html', result);
+        });
 };
