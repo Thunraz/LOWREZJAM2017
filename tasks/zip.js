@@ -1,8 +1,9 @@
 'use strict';
 
-let clean   = require('gulp-clean'),
+let colors  = require('ansi-colors'),
+    clean   = require('gulp-clean'),
+    flog    = require('fancy-log'),
     gulp    = require('gulp'),
-    gutil   = require('gulp-util'),
     through = require('through2'),
     uglify  = require('gulp-uglify-es').default,
     zip     = require('gulp-zip');
@@ -52,7 +53,7 @@ function getZipSize(inKib) {
         formattedSize = formattedSize.toLocaleString();
         formattedSize += inKib ? ' KiB' : ' B';
 
-        gutil.log('Size', gutil.colors.cyan(filenameShort), ':', gutil.colors.magenta(formattedSize));
+        flog('Size', colors.cyan(filenameShort), ':', colors.magenta(formattedSize));
 
         callback(null, file);
     });

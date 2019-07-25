@@ -16,9 +16,11 @@
     "dev": "gulp"
   },
   "devDependencies": {
+    "ansi-colors": "^4.1.1",
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
     "eslint": "^5.16.0",
+    "fancy-log": "^1.3.3",
     "gulp": "^4.0.2",
     "gulp-clean": "^0.4.0",
     "gulp-concat-css": "^3.1.0",
@@ -26,7 +28,6 @@
     "gulp-rename": "^1.4.0",
     "gulp-uglify-es": "^1.0.1",
     "gulp-uglifycss": "^1.1.0",
-    "gulp-util": "^3.0.8",
     "gulp-zip": "^4.2.0",
     "minimatch": "^3.0.4",
     "pug": "^2.0.3",

@@ -1,6 +1,7 @@
 'use strict';
 
-let gutil = require('gulp-util'),
+let colors = require('ansi-colors'),
+    flog   = require('fancy-log'),
     http  = require('http'),
     path  = require('path'),
     st    = require('st');
@@ -8,7 +9,7 @@ let gutil = require('gulp-util'),
 export default (done) => {
     let port = process.env.GULP_PORT || 8080;
 
-    gutil.log('Starting server on port', gutil.colors.magenta(port));
+    flog('Starting server on port', colors.magenta(port));
     
     http.createServer(
         st({
