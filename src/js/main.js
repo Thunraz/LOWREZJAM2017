@@ -5,7 +5,6 @@ let controls = new Controls();
 let game     = new Game(controls);
 
 let lastFrameTime = 0;
-
 let frameCounter = 0;
 
 /**
@@ -22,7 +21,7 @@ function gameLoop(currentFrameTime) {
         controls.update();
         game.update(deltaT / 1000);
         game.draw();
-    } else if(frameCounter % 10 == 0) {
+    } else if(frameCounter % 10 === 0) {
         game.draw();
     }
 
