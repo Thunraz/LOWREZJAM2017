@@ -21,9 +21,9 @@ body, html {
     width:  100vw;
     height: 100vh;
     position: absolute;
-    
+
     z-index: 9;
-    font-family: 'Fira Code';
+    font-family: 'Fira Code', Consolas, monospace;
     font-size: 1vmin;
     white-space: pre;
     color: white;

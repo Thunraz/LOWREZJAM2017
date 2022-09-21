@@ -1,5 +1,7 @@
-import Controls from './classes/Controls.js';
-import Game     from './classes/Game';
+import './css/main.css';
+
+import Controls from './js/classes/Controls.js';
+import Game     from './js/classes/Game';
 
 let controls = new Controls();
 let game     = new Game(controls);

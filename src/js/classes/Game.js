@@ -15,17 +15,17 @@ class Game {
         this.controls = controls;
 
         this.ratio = 1;
-        this.gameContainer = document.getElementById('g');
+        this.gameContainer = document.getElementById('game');
         let rect = this.gameContainer.getBoundingClientRect();
         this.width  = rect.width;
         this.height = rect.height;
-        
+
         this.frames = 0;
         this.runTime = 0.0;
         this.buttonTimeout = 0.0;
         this.isRecording = false;
 
-        this.debugElement = document.getElementById('d');
+        this.debugElement = document.getElementById('debug');
 
         this.scene = new THREE.Scene();
 
@@ -47,7 +47,7 @@ class Game {
         this.sun.castShadow = true;
         this.sun.shadow.camera.near = 0.5;
         this.sun.shadow.camera.far  = 1000;
-        
+
         this.sun.shadow.camera.top    = 300;
         this.sun.shadow.camera.right  = 200;
         this.sun.shadow.camera.bottom = -200;
@@ -57,7 +57,7 @@ class Game {
 
         let hemiLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
         this.scene.add(hemiLight);
-        
+
         this.camera = new THREE.PerspectiveCamera(75, this.ratio, 0.1, 20000);
         this.camera.name = 'main cam';
         this.camera.position.set(GP.CameraOffset.x, GP.CameraOffset.y, GP.CameraOffset.z);
@@ -67,11 +67,11 @@ class Game {
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.renderer.setSize(GP.GameSize, GP.GameSize);
         this.renderer.shadowMap.enabled = true;
-        this.renderer.shadowMap.type    = THREE.PCFShadowMap; 
+        this.renderer.shadowMap.type    = THREE.PCFShadowMap;
         this.gameContainer.appendChild(this.renderer.domElement);
         this.renderer.domElement.style = null;
     }
-    
+
     /**
      * Draw a single frame
      * @returns {void}
