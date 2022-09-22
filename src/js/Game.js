@@ -1,10 +1,10 @@
 import * as THREE from 'three';
 
-import GP           from '../GameProperties.js';
-import Player       from './Player.js';
-import Port         from './Port.js';
-import WaterSurface from './WaterSurface.js';
-import WaterTrail   from './WaterTrail.js';
+import GP           from './GameProperties';
+import Player       from './Player';
+import Port         from './Port';
+import WaterSurface from './WaterSurface';
+import WaterTrail   from './WaterTrail';
 
 class Game {
     /**
@@ -16,7 +16,7 @@ class Game {
 
         this.ratio = 1;
         this.gameContainer = document.getElementById('game');
-        let rect = this.gameContainer.getBoundingClientRect();
+        const rect = this.gameContainer.getBoundingClientRect();
         this.width  = rect.width;
         this.height = rect.height;
 
@@ -42,7 +42,7 @@ class Game {
         this.port.position.set(-100, 0, 0);
         this.scene.add(this.port);
 
-        this.sun = new THREE.DirectionalLight(0xffffff, .5);
+        this.sun = new THREE.DirectionalLight(0xffffff, 0.5);
         this.sun.position.set(GP.SunPosition.x, GP.SunPosition.y, GP.SunPosition.z);
         this.sun.castShadow = true;
         this.sun.shadow.camera.near = 0.5;
@@ -55,13 +55,13 @@ class Game {
         this.sun.target = this.player;
         this.scene.add(this.sun);
 
-        let hemiLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+        const hemiLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
         this.scene.add(hemiLight);
 
         this.camera = new THREE.PerspectiveCamera(75, this.ratio, 0.1, 20000);
         this.camera.name = 'main cam';
         this.camera.position.set(GP.CameraOffset.x, GP.CameraOffset.y, GP.CameraOffset.z);
-        this.camera.lookAt(new THREE.Vector3(0))
+        this.camera.lookAt(new THREE.Vector3(0));
 
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setPixelRatio(window.devicePixelRatio);
@@ -91,31 +91,33 @@ class Game {
         this.runTime += dt;
         this.frames++;
 
-        if(this.buttonTimeout >= 0.0) {
+        if (this.buttonTimeout >= 0.0) {
             this.buttonTimeout -= dt;
         }
 
-        let oldPlayerPosition = new THREE.Vector3(this.player.position.x, 0, this.player.position.z);
+        const oldPlayerPosition = new THREE.Vector3(this.player.position.x, 0, this.player.position.z);
 
         this.controls.update();
         this.handleControls(this.controls.states, dt);
         this.player.update(dt);
 
-        let playerPositionDelta = oldPlayerPosition.sub(new THREE.Vector3(this.player.position.x, 0, this.player.position.z));
+        const playerPositionDelta = oldPlayerPosition.sub(
+            new THREE.Vector3(this.player.position.x, 0, this.player.position.z),
+        );
         this.camera.position.sub(playerPositionDelta);
 
         // Move water with camera
         this.waterSurface.position.set(
             this.camera.position.x - GP.CameraOffset.x,
             this.camera.position.y - GP.CameraOffset.y,
-            this.camera.position.z - GP.CameraOffset.z
+            this.camera.position.z - GP.CameraOffset.z,
         );
 
         // Move sun with player
         this.sun.position.set(
             this.player.position.x + GP.SunPosition.x,
             this.player.position.y + GP.SunPosition.y,
-            this.player.position.z + GP.SunPosition.z
+            this.player.position.z + GP.SunPosition.z,
         );
 
         this.waterSurface.offset.x -= playerPositionDelta.x / 800;
@@ -126,25 +128,26 @@ class Game {
         this.port.update(dt);
     }
 
-    debug(text) {
-        if(typeof(text) == 'object') {
+    debug(debugText) {
+        let text = debugText;
+        if (typeof (text) === 'object') {
             text = JSON.stringify(text);
         }
-        this.debugElement.innerHTML += text + '\n';
+        this.debugElement.innerHTML += `${text}\n`;
     }
 
-    handleControls(states, dt) {
-        if(states.toggleRecord && this.buttonTimeout <= 0.0) {
+    handleControls(states, _dt) {
+        if (states.toggleRecord && this.buttonTimeout <= 0.0) {
             this.buttonTimeout += GP.ButtonTimeout;
             this.isRecording = !this.isRecording;
 
-            if(this.isRecording) {
+            if (this.isRecording) {
                 console.log('Start recording');
                 this.stream = this.renderer.domElement.captureStream();
                 console.log(this.stream);
                 this.recordedBlobs = [];
 
-                let options = { mimeType: 'video/webm', videoBitsPerSecond: 4000e3 };
+                const options = { mimeType: 'video/webm', videoBitsPerSecond: 4000e3 };
                 try {
                     this.mediaRecorder = new MediaRecorder(this.stream, options);
 
@@ -156,21 +159,21 @@ class Game {
                     };
                     this.mediaRecorder.start(100); // collect 100ms of data
                     console.log(this.mediaRecorder);
-                } catch(e) {
+                } catch (e) {
                     console.warn('Unable to create MediaRecorder with options Object: ', e);
                 }
             } else {
                 console.log('Stop recording');
                 this.mediaRecorder.stop();
-                let blob = new Blob(this.recordedBlobs, { type: 'video/webm' });
-                let url  = window.URL.createObjectURL(blob);
-                let a    = document.createElement('a');
+                const blob = new Blob(this.recordedBlobs, { type: 'video/webm' });
+                const url  = window.URL.createObjectURL(blob);
+                const a    = document.createElement('a');
                 a.style.display = 'none';
                 a.href = url;
                 a.download = 'output.webm';
                 document.body.appendChild(a);
                 a.click();
-                setTimeout(function() {
+                setTimeout(() => {
                     document.body.removeChild(a);
                     window.URL.revokeObjectURL(url);
                 }, 100);

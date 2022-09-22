@@ -1,14 +1,14 @@
 class Controls {
     constructor() {
         // Add a couple of event listeners
-        document.addEventListener('pointerlockchange', () => { this.onPointerLockChange() }, false);
-        document.addEventListener('pointerlockerror',  () => { this.onPointerLockError()  }, false);
-        document.addEventListener('mousemove',        (e) => { this.onMouseMove(e)        }, false);
-        document.addEventListener('click',            (e) => { this.onMouseClick(e)       }, false);
-        document.addEventListener('mouseup',          (e) => { this.onMouseUp(e)          }, false);
-        document.addEventListener('mousedown',        (e) => { this.onMouseDown(e)        }, false);
-        document.addEventListener('keydown',          (e) => { this.onKeyDown(e)          }, false);
-        document.addEventListener('keyup',            (e) => { this.onKeyUp(e)            }, false);
+        document.addEventListener('pointerlockchange', () => { this.onPointerLockChange(); }, false);
+        document.addEventListener('pointerlockerror', () => { this.onPointerLockError(); }, false);
+        document.addEventListener('mousemove', (e) => { this.onMouseMove(e); }, false);
+        document.addEventListener('click', (e) => { this.onMouseClick(e); }, false);
+        document.addEventListener('mouseup', (e) => { this.onMouseUp(e); }, false);
+        document.addEventListener('mousedown', (e) => { this.onMouseDown(e); }, false);
+        document.addEventListener('keydown', (e) => { this.onKeyDown(e); }, false);
+        document.addEventListener('keyup', (e) => { this.onKeyUp(e); }, false);
 
         this.noticeContainer = document.getElementById('notice-container');
         this.blocker         = document.getElementById('blocker');
@@ -17,7 +17,7 @@ class Controls {
         this.noticeContainer.addEventListener('click', () => {
             this.noticeContainer.style.display = 'none';
             this.element.requestPointerLock();
-        }, false );
+        }, false);
 
         // Define keyboard keys
         this.keyCodes = {
@@ -37,20 +37,20 @@ class Controls {
         this.states = {
             // Mouse
             leftMouseJustClicked: false,
-            leftMouseJustUp     : false,
-            leftMouseJustDown   : false,
-            leftMouseUp         : true,
-            leftMouseDown       : false,
+            leftMouseJustUp: false,
+            leftMouseJustDown: false,
+            leftMouseUp: true,
+            leftMouseDown: false,
 
             // Keyboard
-            up                  : false,
-            down                : false,
-            left                : false,
-            right               : false,
-            movementX           : 0.0,
-            movementY           : 0.0,
+            up: false,
+            down: false,
+            left: false,
+            right: false,
+            movementX: 0.0,
+            movementY: 0.0,
 
-            toggleRecord        : false
+            toggleRecord: false,
         };
     }
 
@@ -100,9 +100,9 @@ class Controls {
      * @returns {void}
      */
     onKeyDown(e) {
-        let code = this.keyCodes[e.which];
+        const code = this.keyCodes[e.which];
 
-        if(code !== undefined) {
+        if (code !== undefined) {
             this.states[code] = true;
         }
     }
@@ -113,9 +113,9 @@ class Controls {
      * @returns {void}
      */
     onKeyUp(e) {
-        let code = this.keyCodes[e.which];
+        const code = this.keyCodes[e.which];
         
-        if(code !== undefined) {
+        if (code !== undefined) {
             this.states[code] = false;
         }
     }
@@ -157,7 +157,6 @@ class Controls {
         this.states.leftMouseDown     = true;
         this.states.leftMouseUp       = false;
     }
-
 }
 
 export default Controls;

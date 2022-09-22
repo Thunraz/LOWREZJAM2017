@@ -13,14 +13,14 @@ class Port extends THREE.Object3D {
 
         this.showBoundingBox = showBoundingBox || false;
 
-        let scale = 15;
+        const scale = 15;
 
-        let loader = new THREE.ObjectLoader();
+        const loader = new THREE.ObjectLoader();
         loader.load(
             'assets/models/port.json',
             (mesh) => {
-                for(let i = 0; i < mesh.children.length; i++) {
-                    let child = mesh.children[i].clone();
+                for (let i = 0; i < mesh.children.length; i++) {
+                    const child = mesh.children[i].clone();
                     child.castShadow    = true;
                     child.receiveShadow = true;
 
@@ -28,27 +28,27 @@ class Port extends THREE.Object3D {
                     
                     // Calculate bounding boxes for geometries
                     child.geometry.computeBoundingBox();
-                    //this.createBoundingBox(child);
+                    // this.createBoundingBox(child);
 
                     // Apply material to houses
-                    if(child.name == 'Houses') {
-                        for(let j = 0; j < child.material.length; j++) {
-                            if(child.material[j].name == 'Walls') {
+                    if (child.name === 'Houses') {
+                        for (let j = 0; j < child.material.length; j++) {
+                            if (child.material[j].name === 'Walls') {
                                 child.material[j] = new THREE.MeshStandardMaterial({ color: 0x8c001a });
                                 child.material[j].name = 'Walls';
-                            } else if(child.material[j].name == 'Roofs') {
+                            } else if (child.material[j].name === 'Roofs') {
                                 child.material[j] = new THREE.MeshStandardMaterial({ color: 0x333333 });
                                 child.material[j].name = 'Roofs';
-                            } else if(child.material[j].name == 'Hook') {
+                            } else if (child.material[j].name === 'Hook') {
                                 child.material[j] = new THREE.MeshStandardMaterial({ color: 0xdddddd });
                                 child.material[j].name = 'Hook';
-                            } else if(child.material[j].name == 'Dark') {
+                            } else if (child.material[j].name === 'Dark') {
                                 child.material[j] = new THREE.MeshStandardMaterial({ color: 0x0 });
                                 child.material[j].name = 'Dark';
-                            } else if(child.material[j].name == 'Ground') {
+                            } else if (child.material[j].name === 'Ground') {
                                 child.material[j] = new THREE.MeshStandardMaterial({ color: 0xd86f1c });
                                 child.material[j].name = 'Ground';
-                            } else if(child.material[j].name == 'Doors') {
+                            } else if (child.material[j].name === 'Doors') {
                                 child.material[j] = new THREE.MeshStandardMaterial({ color: 0x6f7ad5 });
                                 child.material[j].name = 'Doors';
                             }
@@ -56,58 +56,63 @@ class Port extends THREE.Object3D {
                     }
                     this.add(child);
                 }
-            }
+            },
         );
 
         loader.load(
             'assets/models/island.json',
             (mesh) => {
-                let island = mesh.clone();
+                const island = mesh.clone();
                 island.castShadow    = true;
                 island.receiveShadow = true;
-                //island.scale.set(scale, scale, scale);
+                // island.scale.set(scale, scale, scale);
                 
                 this.createBoundingBox(mesh);
                 
                 island.material = new THREE.MeshStandardMaterial({
                     name: 'Sand',
-                    color: 0x336699
+                    color: 0x336699,
                 });
                 
                 this.add(island);
-            }
+            },
         );
     }
 
-    update(dt) {
+    // eslint-disable-next-line class-methods-use-this
+    update(_dt) {
         
     }
 
     createBoundingBox(mesh) {
         mesh.geometry.computeBoundingBox();
-        let boundingBox = mesh.geometry.boundingBox;
-        let dimensions = new THREE.Vector3(
+        const { boundingBox } = mesh.geometry;
+        const dimensions = new THREE.Vector3(
             boundingBox.max.x - boundingBox.min.x,
             boundingBox.max.y - boundingBox.min.y,
-            boundingBox.max.z - boundingBox.min.z
+            boundingBox.max.z - boundingBox.min.z,
         );
 
-        let boundingBoxGeometry = new THREE.BoxGeometry(
-            dimensions.x, dimensions.y, dimensions.z,
-            1, 1, 1
+        const boundingBoxGeometry = new THREE.BoxGeometry(
+            dimensions.x,
+            dimensions.y,
+            dimensions.z,
+            1,
+            1,
+            1,
         );
-        let boundingBoxMaterial = new THREE.MeshBasicMaterial({
+        const boundingBoxMaterial = new THREE.MeshBasicMaterial({
             color: 0xff00ff,
             visible: this.showBoundingBox,
-            wireframe: true
+            wireframe: true,
         });
-        let boundingBoxMesh     = new THREE.Mesh(boundingBoxGeometry, boundingBoxMaterial);
+        const boundingBoxMesh = new THREE.Mesh(boundingBoxGeometry, boundingBoxMaterial);
         boundingBoxMesh.position.set(
             (boundingBox.min.x + boundingBox.max.x) / 2,
             (boundingBox.min.y + boundingBox.max.y) / 2,
-            (boundingBox.min.z + boundingBox.max.z) / 2
+            (boundingBox.min.z + boundingBox.max.z) / 2,
         );
-        boundingBoxMesh.name = 'bounding_box_' + mesh.name;
+        boundingBoxMesh.name = `bounding_box_${mesh.name}`;
 
         console.log(boundingBoxMesh);
         this.add(boundingBoxMesh);

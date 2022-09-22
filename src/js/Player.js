@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-import GP from '../GameProperties';
+import GP from './GameProperties';
 
 class Player extends THREE.Object3D {
     /**
@@ -14,9 +14,9 @@ class Player extends THREE.Object3D {
 
         this.enableBop = false;
 
-        let scale = 15;
+        const scale = 15;
 
-        let loader = new THREE.ObjectLoader();
+        const loader = new THREE.ObjectLoader();
         loader.load(
             'assets/models/ship.json',
             (mesh) => {
@@ -27,21 +27,27 @@ class Player extends THREE.Object3D {
                 this.add(this.ship);
 
                 this.ship.geometry.computeBoundingBox();
-                let shipBoundingBox = this.ship.geometry.boundingBox;
-                let dimensions = new THREE.Vector3(
+                const shipBoundingBox = this.ship.geometry.boundingBox;
+                const dimensions = new THREE.Vector3(
                     Math.abs(shipBoundingBox.max.x) + Math.abs(shipBoundingBox.min.x),
                     Math.abs(shipBoundingBox.max.y) + Math.abs(shipBoundingBox.min.y),
-                    Math.abs(shipBoundingBox.max.z) + Math.abs(shipBoundingBox.min.z)
+                    Math.abs(shipBoundingBox.max.z) + Math.abs(shipBoundingBox.min.z),
                 );
 
-                let boundingBoxGeometry = new THREE.BoxGeometry(
-                    dimensions.x, dimensions.y, dimensions.z,
-                    2, 4, 12
+                const boundingBoxGeometry = new THREE.BoxGeometry(
+                    dimensions.x,
+                    dimensions.y,
+                    dimensions.z,
+                    2,
+                    4,
+                    12,
                 );
-                let boundingBoxMaterial = new THREE.MeshBasicMaterial({ color: 0xff00ff, visible: true, wireframe: true });
+                const boundingBoxMaterial = new THREE.MeshBasicMaterial(
+                    { color: 0xff00ff, visible: true, wireframe: true },
+                );
                 this.boundingBox = new THREE.Mesh(boundingBoxGeometry, boundingBoxMaterial);
                 this.add(this.boundingBox);
-            }
+            },
         );
 
         loader.load(
@@ -52,17 +58,16 @@ class Player extends THREE.Object3D {
                 this.sails.receiveShadow = true;
                 this.sails.geometry.scale(scale, scale, scale);
                 this.add(this.sails);
-            }
+            },
         );
-        
 
         this.acceleration = new THREE.Vector3();
         this.numFrames = 0;
 
-        let lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, vertexColors: true });
-        let lineGeometry = new THREE.BufferGeometry();
-        lineGeometry.addAttribute('position', new THREE.BufferAttribute(new Float32Array([]), 3));
-        lineGeometry.addAttribute('color', new THREE.BufferAttribute(new Float32Array([]), 3));
+        const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, vertexColors: true });
+        const lineGeometry = new THREE.BufferGeometry();
+        lineGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array([]), 3));
+        lineGeometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array([]), 3));
 
         this.line = new THREE.Line(lineGeometry, lineMaterial);
         this.game.scene.add(this.line);
@@ -74,75 +79,79 @@ class Player extends THREE.Object3D {
         this.numFrames++;
         this.handleControls(this.game.controls.states, dt);
 
-        if(this.checkForCollision()) {
-            let factor = -1.1;
+        if (this.checkForCollision()) {
+            const factor = -1.1;
             console.log('collision');
-            this.acceleration.x = this.acceleration.x * factor;
-            this.acceleration.z = this.acceleration.z * factor;
+            this.acceleration.x *= factor;
+            this.acceleration.z *= factor;
         }
 
         this.position.x += this.acceleration.x;
         this.position.z += this.acceleration.z;
 
         // Bop around in the water
-        if(this.enableBop) {
+        if (this.enableBop) {
             this.position.y = -0.5 * Math.sin(2 * this.game.runTime) + 1.5 * Math.sin(3 * this.game.runTime) + 0.5;
             this.rotation.z = Math.sin(1.5 * this.game.runTime) * 0.1;
 
-            let rot = this.acceleration.x + this.acceleration.z;
-            let maxAngle = 5;
-            this.rotation.x += rot * Math.PI / 180;
-            if(this.rotation.x >= maxAngle * Math.PI / 180) {
-                this.rotation.x = maxAngle * Math.PI / 180;
-            } else if(this.rotation.x <= -maxAngle * Math.PI / 180) {
-                this.rotation.x = -maxAngle * Math.PI / 180;
+            const rot = this.acceleration.x + this.acceleration.z;
+            const maxAngle = 5;
+            this.rotation.x += (rot * Math.PI) / 180;
+            if (this.rotation.x >= (maxAngle * Math.PI) / 180) {
+                this.rotation.x = (maxAngle * Math.PI) / 180;
+            } else if (this.rotation.x <= (-maxAngle * Math.PI) / 180) {
+                this.rotation.x = (-maxAngle * Math.PI) / 180;
             }
         }
 
         this.rotation.x *= 0.99;
 
         this.acceleration.multiplyScalar(0.99);
-        if(this.acceleration.length() <= 0.01) this.acceleration.multiplyScalar(0.0);
+        if (this.acceleration.length() <= 0.01) this.acceleration.multiplyScalar(0.0);
     }
 
     checkForCollision() {
-        let boundingBoxes = this.game.port.children.filter((cur) => {
-            return cur.name.startsWith('bounding_box_');
-        });
+        // const boundingBoxes = this.game.port.children.filter((cur) => cur.name.startsWith('bounding_box_'));
 
-        let portChildren = this.game.port.children.filter((cur) => {
-            return !cur.name.startsWith('bounding_');
-        });
+        const portChildren = this.game.port.children.filter((cur) => !cur.name.startsWith('bounding_'));
 
-        let vertices = [];
-        let colors   = [];
+        const vertices = [];
+        const colors   = [];
 
-        for(let index = 0; index < this.boundingBox.geometry.vertices.length; index++) {
-            let directionVector = this.localToWorld(this.boundingBox.geometry.vertices[index].clone());
-            let directionNormalized = directionVector.clone().normalize();
+        for (let index = 0; index < this.boundingBox.geometry.vertices.length; index++) {
+            const directionVector = this.localToWorld(this.boundingBox.geometry.vertices[index].clone());
+            // const directionNormalized = directionVector.clone().normalize();
             
             // Add vertices for the lines
             colors.push(
-                1.0, 1.0, 0.0,
-                0.0, 1.0, 1.0
+                1.0,
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+                1.0,
             );
             vertices.push(
-                this.position.x, this.position.y, this.position.z,
-                directionVector.x, directionVector.y, directionVector.z
+                this.position.x,
+                this.position.y,
+                this.position.z,
+                directionVector.x,
+                directionVector.y,
+                directionVector.z,
             );
 
-            let ray = new THREE.Ray(this.position, directionVector);
-            for(let i = 0; i < portChildren.length; i++) {
-                if(portChildren[i].name == 'Island_1') continue;
+            const ray = new THREE.Ray(this.position, directionVector);
+            for (let i = 0; i < portChildren.length; i++) {
+                if (portChildren[i].name === 'Island_1') continue;
 
-                let result = ray.intersectBox(portChildren[i].geometry.boundingBox);
-                if(result != null && result.length() <= directionVector.length()) {
+                const result = ray.intersectBox(portChildren[i].geometry.boundingBox);
+                if (result != null && result.length() <= directionVector.length()) {
                     console.log(portChildren[i].name, portChildren[i].geometry.boundingBox);
                     return true;
                 }
             }
 
-            /*this.raycaster.set(this.position, directionVector);
+            /* this.raycaster.set(this.position, directionVector);
             let result = this.raycaster.intersectObjects(boundingBoxes);
             if(result == null) continue;
             
@@ -159,19 +168,17 @@ class Player extends THREE.Object3D {
     }
 
     handleControls(states, dt) {
-        if(states.up) {
+        if (states.up) {
             this.acceleration.x += -Math.sin(this.rotation.y) * GP.PlayerAcceleration * dt;
             this.acceleration.z += -Math.cos(this.rotation.y) * GP.PlayerAcceleration * dt;
-        }
-        else if(states.down) {
+        } else if (states.down) {
             this.acceleration.x += Math.sin(this.rotation.y) * GP.PlayerAcceleration * dt;
             this.acceleration.z += Math.cos(this.rotation.y) * GP.PlayerAcceleration * dt;
         }
 
-        if(states.left) {
+        if (states.left) {
             this.rotation.y += GP.PlayerTurnSpeed * dt;
-        }
-        else if(states.right) {
+        } else if (states.right) {
             this.rotation.y -= GP.PlayerTurnSpeed * dt;
         }
     }

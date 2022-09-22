@@ -1,10 +1,10 @@
 import './css/main.css';
 
-import Controls from './js/classes/Controls.js';
-import Game     from './js/classes/Game';
+import Controls from './js/Controls';
+import Game     from './js/Game';
 
-let controls = new Controls();
-let game     = new Game(controls);
+const controls = new Controls();
+const game     = new Game(controls);
 
 let lastFrameTime = 0;
 let frameCounter = 0;
@@ -16,14 +16,14 @@ let frameCounter = 0;
  */
 function gameLoop(currentFrameTime) {
     requestAnimationFrame(gameLoop);
-    let deltaT = currentFrameTime - lastFrameTime;
+    const deltaT = currentFrameTime - lastFrameTime;
     lastFrameTime = currentFrameTime;
 
-    if(controls.enabled) {
+    if (controls.enabled) {
         controls.update();
         game.update(deltaT / 1000);
         game.draw();
-    } else if(frameCounter % 10 === 0) {
+    } else if (frameCounter % 10 === 0) {
         game.draw();
     }
 
@@ -32,4 +32,4 @@ function gameLoop(currentFrameTime) {
 
 // eslint-disable-next-line no-console
 console.log('⛵ Welcome to make-sail! 🌊');
-gameLoop();
+gameLoop(0);
