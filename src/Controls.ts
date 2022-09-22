@@ -1,57 +1,65 @@
-class Controls {
+export class Controls {
+    private noticeElement: HTMLElement;
+    private blockerElement: HTMLElement;
+    private readonly rootElement: Element;
+
+    _enabled: boolean;
+    public get enabled() {
+        return this._enabled;
+    }
+
+    private keyCodes = {
+        38: 'up',    // ↑
+        40: 'down',  // ↓
+        37: 'left',  // ←
+        39: 'right', // →
+
+        87: 'up',    // W
+        83: 'down',  // S
+        65: 'left',  // A
+        68: 'right', // D
+
+        82: 'toggleRecord', // R
+    };
+
+    private states = {
+        // Mouse
+        leftMouseJustClicked: false,
+        leftMouseJustUp: false,
+        leftMouseJustDown: false,
+        leftMouseUp: true,
+        leftMouseDown: false,
+
+        // Keyboard
+        up: false,
+        down: false,
+        left: false,
+        right: false,
+        movementX: 0.0,
+        movementY: 0.0,
+
+        toggleRecord: false,
+    };
+
     constructor() {
         // Add a couple of event listeners
         document.addEventListener('pointerlockchange', () => { this.onPointerLockChange(); }, false);
         document.addEventListener('pointerlockerror', () => { this.onPointerLockError(); }, false);
         document.addEventListener('mousemove', (e) => { this.onMouseMove(e); }, false);
-        document.addEventListener('click', (e) => { this.onMouseClick(e); }, false);
-        document.addEventListener('mouseup', (e) => { this.onMouseUp(e); }, false);
-        document.addEventListener('mousedown', (e) => { this.onMouseDown(e); }, false);
+        document.addEventListener('click', () => { this.onMouseClick(); }, false);
+        document.addEventListener('mouseup', () => { this.onMouseUp(); }, false);
+        document.addEventListener('mousedown', () => { this.onMouseDown(); }, false);
         document.addEventListener('keydown', (e) => { this.onKeyDown(e); }, false);
         document.addEventListener('keyup', (e) => { this.onKeyUp(e); }, false);
 
-        this.noticeContainer = document.getElementById('notice-container');
-        this.blocker         = document.getElementById('blocker');
-        this.element         = document.body;
+        this.noticeElement = document.getElementById('notice-container');
+        this.blockerElement = document.getElementById('blocker');
+        this.rootElement = document.body;
 
         this.noticeElement.addEventListener('click', () => {
             this.noticeElement.style.display = 'none';
-            this.element.requestPointerLock();
+            this.rootElement.requestPointerLock();
         }, false);
-
-        // Define keyboard keys
-        this.keyCodes = {
-            38: 'up',    // ↑
-            40: 'down',  // ↓
-            37: 'left',  // ←
-            39: 'right', // →
-
-            87: 'up',    // W
-            83: 'down',  // S
-            65: 'left',  // A
-            68: 'right', // D
-            
-            82: 'toggleRecord', // R
-        };
-        
-        this.states = {
-            // Mouse
-            leftMouseJustClicked: false,
-            leftMouseJustUp: false,
-            leftMouseJustDown: false,
-            leftMouseUp: true,
-            leftMouseDown: false,
-
-            // Keyboard
-            up: false,
-            down: false,
-            left: false,
-            right: false,
-            movementX: 0.0,
-            movementY: 0.0,
-
-            toggleRecord: false,
-        };
     }
 
     /**
@@ -59,14 +67,14 @@ class Controls {
      * @returns {void}
      */
     onPointerLockChange() {
-        if (document.pointerLockElement === this.element) {
+        if (document.pointerLockElement === this.rootElement) {
             this._enabled = true;
 
-            this.blocker.style.display = 'none';
+            this.blockerElement.style.display = 'none';
         } else {
             this._enabled = false;
 
-            this.blocker.style.display = 'block';
+            this.blockerElement.style.display = 'block';
             this.noticeElement.style.display = '';
         }
     }
@@ -114,7 +122,7 @@ class Controls {
      */
     onKeyUp(e) {
         const code = this.keyCodes[e.which];
-        
+
         if (code !== undefined) {
             this.states[code] = false;
         }
@@ -158,5 +166,3 @@ class Controls {
         this.states.leftMouseUp       = false;
     }
 }
-
-export default Controls;

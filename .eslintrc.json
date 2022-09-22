@@ -1,0 +1,65 @@
+{
+    "root": true,
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "rules": {
+        "no-console": "warn",
+        "no-debugger": "warn",
+        "no-const-assign": "warn",
+        "no-this-before-super": "warn",
+        "no-undef": "warn",
+        "no-unreachable": "warn",
+        "no-var": "error",
+        "no-tabs": "error",
+        "no-multi-spaces": "off",
+        "no-trailing-spaces": ["error", { "skipBlankLines": true }],
+        "no-bitwise": "off",
+        "no-plusplus": "off",
+        "no-duplicate-imports": "error",
+        "no-continue": "off",
+
+        "constructor-super": "warn",
+        "valid-typeof": "warn",
+        "indent": ["error", 4],
+        "sort-imports": "error",
+        "valid-jsdoc": "warn",
+        "quotes": ["error", "single"],
+        "quote-props": "off",
+        "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
+
+        "linebreak-style": "off",
+
+        "spaced-comment": [
+            "error",
+            "always",
+            {
+                "block": { "exceptions": ["/"] },
+                "line": { "exceptions": ["*/", "*"] }
+            }
+        ],
+
+        "max-len": [
+            "error",
+            120,
+            2,
+            {
+                "ignoreUrls": true,
+                "ignoreComments": false,
+                "ignoreRegExpLiterals": true,
+                "ignoreStrings": true,
+                "ignoreTemplateLiterals": true
+            }
+        ]
+    }
+}
