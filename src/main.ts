@@ -4,4 +4,4 @@ import { Game } from './Game';
 const gameElement = document.querySelector('#game');
 const debugElement = document.querySelector('#debug');
 const game = new Game(gameElement, debugElement);
-game.init();
+game.start();

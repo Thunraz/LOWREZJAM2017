@@ -1,4 +1,6 @@
-export class Controls {
+import { IInputManager } from './IInputManager';
+
+export class InputManager implements IInputManager {
     private noticeElement: HTMLElement;
     private blockerElement: HTMLElement;
     private readonly rootElement: Element;
@@ -63,10 +65,25 @@ export class Controls {
     }
 
     /**
+     * Update controls
+     * @returns {void}
+     */
+    public update() {
+        this.states.leftMouseJustClicked = false;
+        this.states.leftMouseJustUp      = false;
+        this.states.leftMouseJustDown    = false;
+        this.states.leftMouseUp          = true;
+        this.states.leftMouseDown        = false;
+
+        this.states.movementX            = 0.0;
+        this.states.movementY            = 0.0;
+    }
+
+    /**
      * Callback when point lock changes
      * @returns {void}
      */
-    onPointerLockChange() {
+    private onPointerLockChange() {
         if (document.pointerLockElement === this.rootElement) {
             this._enabled = true;
 
@@ -83,23 +100,8 @@ export class Controls {
      * Callback when an error during pointer locking occurred
      * @returns {void}
      */
-    onPointerLockError() {
+    private onPointerLockError() {
         this.noticeElement.style.display = '';
-    }
-
-    /**
-     * Update controls
-     * @returns {void}
-     */
-    update() {
-        this.states.leftMouseJustClicked = false;
-        this.states.leftMouseJustUp      = false;
-        this.states.leftMouseJustDown    = false;
-        this.states.leftMouseUp          = true;
-        this.states.leftMouseDown        = false;
-
-        this.states.movementX            = 0.0;
-        this.states.movementY            = 0.0;
     }
 
     /**
@@ -107,7 +109,7 @@ export class Controls {
      * @param {Event} e Key down event
      * @returns {void}
      */
-    onKeyDown(e) {
+    private onKeyDown(e) {
         const code = this.keyCodes[e.which];
 
         if (code !== undefined) {
@@ -120,7 +122,7 @@ export class Controls {
      * @param {Event} e Key up event
      * @returns {void}
      */
-    onKeyUp(e) {
+    private onKeyUp(e) {
         const code = this.keyCodes[e.which];
 
         if (code !== undefined) {
@@ -133,7 +135,7 @@ export class Controls {
      * @param {Event} e Mouse move event
      * @returns {void}
      */
-    onMouseMove(e) {
+    private onMouseMove(e) {
         this.states.movementX = e.movementX;
         this.states.movementY = e.movementY;
     }
@@ -142,7 +144,7 @@ export class Controls {
      * Handles mouse click event
      * @returns {void}
      */
-    onMouseClick() {
+    private onMouseClick() {
         this.states.leftMouseJustClicked = true;
     }
 
@@ -150,7 +152,7 @@ export class Controls {
      * Handles mouse up event
      * @returns {void}
      */
-    onMouseUp() {
+    private onMouseUp() {
         this.states.leftMouseJustUp = true;
         this.states.leftMouseDown   = false;
         this.states.leftMouseUp     = true;
@@ -160,7 +162,7 @@ export class Controls {
      * Handles mouse down event
      * @returns {void}
      */
-    onMouseDown() {
+    private onMouseDown() {
         this.states.leftMouseJustDown = true;
         this.states.leftMouseDown     = true;
         this.states.leftMouseUp       = false;

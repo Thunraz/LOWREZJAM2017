@@ -1,8 +1,7 @@
 {
     "root": true,
     "env": {
-        "browser": true,
-        "es6": true
+        "browser": true
     },
     "parser": "@typescript-eslint/parser",
     "plugins": [
@@ -18,7 +17,6 @@
         "no-debugger": "warn",
         "no-const-assign": "warn",
         "no-this-before-super": "warn",
-        "no-undef": "warn",
         "no-unreachable": "warn",
         "no-var": "error",
         "no-tabs": "error",
