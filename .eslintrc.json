@@ -29,8 +29,9 @@
 
         "constructor-super": "warn",
         "valid-typeof": "warn",
-        "indent": ["error", 4],
-        "sort-imports": "error",
+        "indent": ["error", 4, {
+            "SwitchCase": 1
+        }],
         "valid-jsdoc": "warn",
         "quotes": ["error", "single"],
         "quote-props": "off",

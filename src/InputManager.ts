@@ -1,16 +1,31 @@
 import { IInputManager } from './IInputManager';
+import { IInputStates } from './IInputStates';
 
-export class InputManager implements IInputManager {
+export class InputManager<T1 extends IInputStates> implements IInputManager<T1> {
     private noticeElement: HTMLElement;
+
+    // public readonly states = {
+    //     // Mouse
+    //     leftMouseJustClicked: false,
+    //     leftMouseJustUp: false,
+    //     leftMouseJustDown: false,
+    //     leftMouseUp: true,
+    //     leftMouseDown: false,
+    //
+    //     // Keyboard
+    //     up: false,
+    //     down: false,
+    //     left: false,
+    //     right: false,
+    //     movementX: 0.0,
+    //     movementY: 0.0,
+    //
+    //     toggleRecord: false,
+    // };
     private blockerElement: HTMLElement;
     private readonly rootElement: Element;
-
-    _enabled: boolean;
-    public get enabled() {
-        return this._enabled;
-    }
-
-    private keyCodes = {
+    private readonly _states: T1;
+    private keyMap = {
         38: 'up',    // ↑
         40: 'down',  // ↓
         37: 'left',  // ←
@@ -24,35 +39,34 @@ export class InputManager implements IInputManager {
         82: 'toggleRecord', // R
     };
 
-    private states = {
-        // Mouse
-        leftMouseJustClicked: false,
-        leftMouseJustUp: false,
-        leftMouseJustDown: false,
-        leftMouseUp: true,
-        leftMouseDown: false,
+    constructor(states: T1) {
+        this._states = states;
 
-        // Keyboard
-        up: false,
-        down: false,
-        left: false,
-        right: false,
-        movementX: 0.0,
-        movementY: 0.0,
-
-        toggleRecord: false,
-    };
-
-    constructor() {
         // Add a couple of event listeners
-        document.addEventListener('pointerlockchange', () => { this.onPointerLockChange(); }, false);
-        document.addEventListener('pointerlockerror', () => { this.onPointerLockError(); }, false);
-        document.addEventListener('mousemove', (e) => { this.onMouseMove(e); }, false);
-        document.addEventListener('click', () => { this.onMouseClick(); }, false);
-        document.addEventListener('mouseup', () => { this.onMouseUp(); }, false);
-        document.addEventListener('mousedown', () => { this.onMouseDown(); }, false);
-        document.addEventListener('keydown', (e) => { this.onKeyDown(e); }, false);
-        document.addEventListener('keyup', (e) => { this.onKeyUp(e); }, false);
+        document.addEventListener('pointerlockchange', () => {
+            this.onPointerLockChange();
+        }, false);
+        document.addEventListener('pointerlockerror', () => {
+            this.onPointerLockError();
+        }, false);
+        document.addEventListener('mousemove', (e) => {
+            this.onMouseMove(e);
+        }, false);
+        document.addEventListener('click', () => {
+            this.onMouseClick();
+        }, false);
+        document.addEventListener('mouseup', () => {
+            this.onMouseUp();
+        }, false);
+        document.addEventListener('mousedown', () => {
+            this.onMouseDown();
+        }, false);
+        document.addEventListener('keydown', (e) => {
+            this.onKeyDown(e);
+        }, false);
+        document.addEventListener('keyup', (e) => {
+            this.onKeyUp(e);
+        }, false);
 
         this.noticeElement = document.getElementById('notice-container');
         this.blockerElement = document.getElementById('blocker');
@@ -64,19 +78,29 @@ export class InputManager implements IInputManager {
         }, false);
     }
 
+    get states(): T1 {
+        return this._states;
+    }
+
+    _enabled: boolean;
+
+    public get enabled() {
+        return this._enabled;
+    }
+
     /**
      * Update controls
      * @returns {void}
      */
     public update() {
         this.states.leftMouseJustClicked = false;
-        this.states.leftMouseJustUp      = false;
-        this.states.leftMouseJustDown    = false;
-        this.states.leftMouseUp          = true;
-        this.states.leftMouseDown        = false;
+        this.states.leftMouseJustUp = false;
+        this.states.leftMouseJustDown = false;
+        this.states.leftMouseUp = true;
+        this.states.leftMouseDown = false;
 
-        this.states.movementX            = 0.0;
-        this.states.movementY            = 0.0;
+        this.states.movementX = 0.0;
+        this.states.movementY = 0.0;
     }
 
     /**
@@ -110,7 +134,7 @@ export class InputManager implements IInputManager {
      * @returns {void}
      */
     private onKeyDown(e) {
-        const code = this.keyCodes[e.which];
+        const code = this.keyMap[e.which];
 
         if (code !== undefined) {
             this.states[code] = true;
@@ -123,7 +147,7 @@ export class InputManager implements IInputManager {
      * @returns {void}
      */
     private onKeyUp(e) {
-        const code = this.keyCodes[e.which];
+        const code = this.keyMap[e.which];
 
         if (code !== undefined) {
             this.states[code] = false;
@@ -154,8 +178,8 @@ export class InputManager implements IInputManager {
      */
     private onMouseUp() {
         this.states.leftMouseJustUp = true;
-        this.states.leftMouseDown   = false;
-        this.states.leftMouseUp     = true;
+        this.states.leftMouseDown = false;
+        this.states.leftMouseUp = true;
     }
 
     /**
@@ -164,7 +188,7 @@ export class InputManager implements IInputManager {
      */
     private onMouseDown() {
         this.states.leftMouseJustDown = true;
-        this.states.leftMouseDown     = true;
-        this.states.leftMouseUp       = false;
+        this.states.leftMouseDown = true;
+        this.states.leftMouseUp = false;
     }
 }

@@ -1,4 +1,9 @@
-export interface IInputManager {
-    get enabled();
-    update();
+import { IInputStates } from './IInputStates';
+
+export interface IInputManager<T extends IInputStates> {
+    get states(): T;
+
+    get enabled(): boolean;
+
+    update(): void;
 }
