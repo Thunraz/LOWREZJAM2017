@@ -56,7 +56,7 @@ export class Game<TInputStates extends IInputStates> {
 
 
     /**
-     * Initializes and starts this game instance
+     * Starts this game instance's main loop
      * @returns{void}
      */
     public start(): void {
