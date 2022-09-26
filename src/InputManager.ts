@@ -1,46 +1,19 @@
 import { IInputManager } from './IInputManager';
 import { IInputStates } from './IInputStates';
+import { IInputKeyMap } from './IInputKeyMap';
 
-export class InputManager<T1 extends IInputStates> implements IInputManager<T1> {
-    private noticeElement: HTMLElement;
+export class InputManager<TInputStates extends IInputStates, TInputKeyMap extends IInputKeyMap>
+implements IInputManager<TInputStates> {
+    private readonly _noticeElement: HTMLElement;
+    private readonly _blockerElement: HTMLElement;
+    private readonly _rootElement: Element;
 
-    // public readonly states = {
-    //     // Mouse
-    //     leftMouseJustClicked: false,
-    //     leftMouseJustUp: false,
-    //     leftMouseJustDown: false,
-    //     leftMouseUp: true,
-    //     leftMouseDown: false,
-    //
-    //     // Keyboard
-    //     up: false,
-    //     down: false,
-    //     left: false,
-    //     right: false,
-    //     movementX: 0.0,
-    //     movementY: 0.0,
-    //
-    //     toggleRecord: false,
-    // };
-    private blockerElement: HTMLElement;
-    private readonly rootElement: Element;
-    private readonly _states: T1;
-    private keyMap = {
-        38: 'up',    // ↑
-        40: 'down',  // ↓
-        37: 'left',  // ←
-        39: 'right', // →
+    private readonly _states: TInputStates;
+    private readonly _keyMap: TInputKeyMap;
 
-        87: 'up',    // W
-        83: 'down',  // S
-        65: 'left',  // A
-        68: 'right', // D
-
-        82: 'toggleRecord', // R
-    };
-
-    constructor(states: T1) {
-        this._states = states;
+    constructor(inputStates: TInputStates, inputKeyMap: TInputKeyMap) {
+        this._states = inputStates;
+        this._keyMap = inputKeyMap;
 
         // Add a couple of event listeners
         document.addEventListener('pointerlockchange', () => {
@@ -68,17 +41,17 @@ export class InputManager<T1 extends IInputStates> implements IInputManager<T1> 
             this.onKeyUp(e);
         }, false);
 
-        this.noticeElement = document.getElementById('notice-container');
-        this.blockerElement = document.getElementById('blocker');
-        this.rootElement = document.body;
+        this._noticeElement = document.getElementById('notice-container');
+        this._blockerElement = document.getElementById('blocker');
+        this._rootElement = document.body;
 
-        this.noticeElement.addEventListener('click', () => {
-            this.noticeElement.style.display = 'none';
-            this.rootElement.requestPointerLock();
+        this._noticeElement.addEventListener('click', () => {
+            this._noticeElement.style.display = 'none';
+            this._rootElement.requestPointerLock();
         }, false);
     }
 
-    get states(): T1 {
+    get states(): TInputStates {
         return this._states;
     }
 
@@ -108,15 +81,15 @@ export class InputManager<T1 extends IInputStates> implements IInputManager<T1> 
      * @returns {void}
      */
     private onPointerLockChange() {
-        if (document.pointerLockElement === this.rootElement) {
+        if (document.pointerLockElement === this._rootElement) {
             this._enabled = true;
 
-            this.blockerElement.style.display = 'none';
+            this._blockerElement.style.display = 'none';
         } else {
             this._enabled = false;
 
-            this.blockerElement.style.display = 'block';
-            this.noticeElement.style.display = '';
+            this._blockerElement.style.display = 'block';
+            this._noticeElement.style.display = '';
         }
     }
 
@@ -125,7 +98,7 @@ export class InputManager<T1 extends IInputStates> implements IInputManager<T1> 
      * @returns {void}
      */
     private onPointerLockError() {
-        this.noticeElement.style.display = '';
+        this._noticeElement.style.display = '';
     }
 
     /**
@@ -134,7 +107,7 @@ export class InputManager<T1 extends IInputStates> implements IInputManager<T1> 
      * @returns {void}
      */
     private onKeyDown(e) {
-        const code = this.keyMap[e.which];
+        const code = this._keyMap[e.code];
 
         if (code !== undefined) {
             this.states[code] = true;
@@ -147,7 +120,7 @@ export class InputManager<T1 extends IInputStates> implements IInputManager<T1> 
      * @returns {void}
      */
     private onKeyUp(e) {
-        const code = this.keyMap[e.which];
+        const code = this._keyMap[e.code];
 
         if (code !== undefined) {
             this.states[code] = false;

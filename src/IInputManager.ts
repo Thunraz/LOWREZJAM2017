@@ -1,7 +1,7 @@
 import { IInputStates } from './IInputStates';
 
-export interface IInputManager<T extends IInputStates> {
-    get states(): T;
+export interface IInputManager<TInputStates extends IInputStates> {
+    get states(): TInputStates;
 
     get enabled(): boolean;
 

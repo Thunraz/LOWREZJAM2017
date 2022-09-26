@@ -4,15 +4,16 @@ import { GameProperties as GP } from './GameProperties';
 import { GameStateMain } from './GameStateMain';
 import { IGameState } from './IGameState';
 import { IInputManager } from './IInputManager';
+import { WebGLRendererParameters } from 'three/src/renderers/WebGLRenderer';
 import { IInputStates } from './IInputStates';
 
-export class Game<TInputManager extends IInputStates> {
+export class Game<TInputStates extends IInputStates> {
     public static runtime: number;
 
     private gameElement: Element | HTMLElement;
     private debugElement: Element | HTMLElement;
 
-    private inputManager: IInputManager<TInputManager>;
+    private inputManager: IInputManager<TInputStates>;
 
     private lastFrameTime = 0;
     private frameCounter = 0;
@@ -25,16 +26,16 @@ export class Game<TInputManager extends IInputStates> {
      * Initializes a new Game instance
      * @param{Element|HTMLElement} gameElement the element where the game will be rendered in
      * @param{Element|HTMLElement} debugElement the element where debug output will be put
-     * @param{IInputManager} inputManager (optional) custom instance of {IInputManager}
-     * @param{IGameState} startupGameState the game state to start the game with
-     * @param{object} rendererParameters options to pass to the renderer
+     * @param{IInputManager} inputManager custom instance of {IInputManager}
+     * @param{IGameState} startupGameState (optional) the game state to start the game with
+     * @param{WebGLRendererParameters} rendererParameters (optional) parameters to pass to the renderer
      */
     public constructor(
         gameElement: Element | HTMLElement,
         debugElement: Element | HTMLElement,
-        inputManager: IInputManager<TInputManager>,
+        inputManager: IInputManager<TInputStates>,
         startupGameState?: IGameState,
-        rendererParameters?: object
+        rendererParameters?: WebGLRendererParameters
     ) {
         Game.runtime = 0.0;
 
