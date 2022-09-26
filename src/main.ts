@@ -2,7 +2,7 @@ import './css/main.css';
 import { Game } from './Game';
 import { InputManager } from './InputManager';
 import { IInputStates } from './IInputStates';
-import { IInputKeyMap } from './IInputKeyMap';
+import { IInputKeyMap, TCodeActionMap } from './IInputKeyMap';
 
 class MyInputStates extends IInputStates {
     // Keyboard
@@ -16,18 +16,21 @@ class MyInputStates extends IInputStates {
 }
 
 class MyInputKeyMap extends IInputKeyMap {
-    protected keyMap = {
-        ArrowUp: 'up',    // ↑
-        ArrowDown: 'down',  // ↓
-        ArrowLeft: 'left',  // ←
-        ArrowRight: 'right', // →
+    constructor() {
+        super();
+        this.assignActions(new Array<TCodeActionMap>(
+            { code: 'KeyW', action: 'up' },
+            { code: 'KeyA', action: 'left' },
+            { code: 'KeyS', action: 'down' },
+            { code: 'KeyD', action: 'right' },
 
-        KeyW: 'up',    // W
-        KeyS: 'down',  // S
-        KeyA: 'left',  // A
-        KeyD: 'right', // D
+            { code: 'ArrowUp', action: 'up' },
+            { code: 'ArrowLeft', action: 'left' },
+            { code: 'ArrowDown', action: 'down' },
+            { code: 'ArrowRight', action: 'right' },
 
-        KeyR: 'toggleRecord', // R
+            { code: 'KeyR', action: 'toggleRecord' },
+        ));
     }
 }
 
