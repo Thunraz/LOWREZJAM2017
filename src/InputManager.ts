@@ -2,16 +2,15 @@ import { IInputManager } from './IInputManager';
 import { IInputStates } from './IInputStates';
 import { IInputKeyMap } from './IInputKeyMap';
 
-export class InputManager<TInputStates extends IInputStates, TInputKeyMap extends IInputKeyMap>
-implements IInputManager<TInputStates> {
+export class InputManager implements IInputManager {
     private readonly _noticeElement: HTMLElement;
     private readonly _blockerElement: HTMLElement;
     private readonly _rootElement: Element;
 
-    private readonly _states: TInputStates;
-    private readonly _keyMap: TInputKeyMap;
+    private readonly _states: IInputStates;
+    private readonly _keyMap: IInputKeyMap;
 
-    constructor(inputStates: TInputStates, inputKeyMap: TInputKeyMap) {
+    constructor(inputStates: IInputStates, inputKeyMap: IInputKeyMap) {
         this._states = inputStates;
         this._keyMap = inputKeyMap;
 
@@ -51,7 +50,7 @@ implements IInputManager<TInputStates> {
         }, false);
     }
 
-    get states(): TInputStates {
+    get states(): IInputStates {
         return this._states;
     }
 
@@ -66,14 +65,14 @@ implements IInputManager<TInputStates> {
      * @returns {void}
      */
     public update() {
-        this.states.leftMouseJustClicked = false;
-        this.states.leftMouseJustUp = false;
-        this.states.leftMouseJustDown = false;
-        this.states.leftMouseUp = true;
-        this.states.leftMouseDown = false;
+        this._states.leftMouseJustClicked = false;
+        this._states.leftMouseJustUp = false;
+        this._states.leftMouseJustDown = false;
+        this._states.leftMouseUp = true;
+        this._states.leftMouseDown = false;
 
-        this.states.movementX = 0.0;
-        this.states.movementY = 0.0;
+        this._states.movementX = 0.0;
+        this._states.movementY = 0.0;
     }
 
     /**
@@ -107,10 +106,10 @@ implements IInputManager<TInputStates> {
      * @returns {void}
      */
     private onKeyDown(e) {
-        const code = this._keyMap[e.code];
+        const code = this._keyMap.getActionForKey(e.code);
 
         if (code !== undefined) {
-            this.states[code] = true;
+            this._states[code] = true;
         }
     }
 
@@ -120,10 +119,10 @@ implements IInputManager<TInputStates> {
      * @returns {void}
      */
     private onKeyUp(e) {
-        const code = this._keyMap[e.code];
+        const code = this._keyMap.getActionForKey(e.code);
 
         if (code !== undefined) {
-            this.states[code] = false;
+            this._states[code] = false;
         }
     }
 
@@ -133,8 +132,8 @@ implements IInputManager<TInputStates> {
      * @returns {void}
      */
     private onMouseMove(e) {
-        this.states.movementX = e.movementX;
-        this.states.movementY = e.movementY;
+        this._states.movementX = e.movementX;
+        this._states.movementY = e.movementY;
     }
 
     /**
@@ -142,7 +141,7 @@ implements IInputManager<TInputStates> {
      * @returns {void}
      */
     private onMouseClick() {
-        this.states.leftMouseJustClicked = true;
+        this._states.leftMouseJustClicked = true;
     }
 
     /**
@@ -150,9 +149,9 @@ implements IInputManager<TInputStates> {
      * @returns {void}
      */
     private onMouseUp() {
-        this.states.leftMouseJustUp = true;
-        this.states.leftMouseDown = false;
-        this.states.leftMouseUp = true;
+        this._states.leftMouseJustUp = true;
+        this._states.leftMouseDown = false;
+        this._states.leftMouseUp = true;
     }
 
     /**
@@ -160,8 +159,8 @@ implements IInputManager<TInputStates> {
      * @returns {void}
      */
     private onMouseDown() {
-        this.states.leftMouseJustDown = true;
-        this.states.leftMouseDown = true;
-        this.states.leftMouseUp = false;
+        this._states.leftMouseJustDown = true;
+        this._states.leftMouseDown = true;
+        this._states.leftMouseUp = false;
     }
 }

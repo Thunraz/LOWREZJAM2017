@@ -5,6 +5,7 @@ import { GameProperties as GP } from './GameProperties';
 import { WaterSurface } from './WaterSurface';
 import { WaterTrail } from './WaterTrail';
 import { Port } from './Port';
+import { IInputStates } from './IInputStates';
 
 export class GameStateMain implements IGameState {
     private readonly _scene: Scene;
@@ -63,10 +64,9 @@ export class GameStateMain implements IGameState {
         renderer.render(this._scene, this._camera);
     }
 
-    update(dt: number): void {
+    update(dt: number, inputStates: IInputStates): void {
         this._runtime += dt;
-        this.player.handleControls();
-        this.player.update(dt);
+        this.player.update(dt, inputStates);
         this.waterSurface.update(dt);
     }
 }

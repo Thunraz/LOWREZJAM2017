@@ -20,10 +20,6 @@ export class WaterSurface extends IGameObject {
         this.createWaves();
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    handleControls(): void {
-    }
-
     update(dt: number): void {
         this.runtime += dt;
         for (let i = 0; i < this.waves.length; i++) {

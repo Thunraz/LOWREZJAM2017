@@ -12,4 +12,12 @@ export class GameProperties {
     static get SunPosition() {
         return new Vector3(300, 500, 500);
     }
+
+    static get PlayerAcceleration() {
+        return 1.0;
+    }
+
+    static get PlayerTurnSpeed() {
+        return 1.0;
+    }
 }

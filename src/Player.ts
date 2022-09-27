@@ -1,65 +1,112 @@
-import * as THREE from 'three';
-import { Object3D, ObjectLoader } from 'three';
+import { BoxGeometry, Mesh, MeshBasicMaterial, Object3D, ObjectLoader, Vector3 } from 'three';
 import { IGameObject } from './IGameObject';
+import { MyInputStates } from './main';
+import { GameProperties as GP } from './GameProperties';
+import { IInputStates } from './IInputStates';
 
 export class Player extends IGameObject {
-    private ship;
-    private sails;
+    public enableBop = true;
+    private _ship: Mesh;
+    private _boundingBox: Mesh;
+    private _sails;
+    private _acceleration: Vector3;
+    private _runtime: number;
 
     constructor() {
         super();
+
+        this._runtime = 0.0;
 
         const scale = 15;
         const loader = new ObjectLoader();
         loader.load(
             'assets/models/ship.json',
             (mesh) => {
-                this.ship = <Object3D>mesh;
-                this.ship.castShadow = true;
-                this.ship.receiveShadow = true;
-                this.ship.geometry.scale(scale, scale, scale);
-                this.add(this.ship);
+                this._ship = <Mesh><Object3D>mesh;
+                this._ship.castShadow = true;
+                this._ship.receiveShadow = true;
+                this._ship.geometry.scale(scale, scale, scale);
+                this.add(this._ship);
 
-                this.ship.geometry.computeBoundingBox();
-                const shipBoundingBox = this.ship.geometry.boundingBox;
-                const dimensions = new THREE.Vector3(
+                this._ship.geometry.computeBoundingBox();
+                const shipBoundingBox = this._ship.geometry.boundingBox;
+                const dimensions = new Vector3(
                     Math.abs(shipBoundingBox.max.x) + Math.abs(shipBoundingBox.min.x),
                     Math.abs(shipBoundingBox.max.y) + Math.abs(shipBoundingBox.min.y),
                     Math.abs(shipBoundingBox.max.z) + Math.abs(shipBoundingBox.min.z),
                 );
 
-                // const boundingBoxGeometry = new THREE.BoxGeometry(
-                //     dimensions.x,
-                //     dimensions.y,
-                //     dimensions.z,
-                //     2,
-                //     4,
-                //     12,
-                // );
-                // const boundingBoxMaterial = new THREE.MeshBasicMaterial(
-                //     { color: 0xff00ff, visible: true, wireframe: true },
-                // );
-                // this.boundingBox = new THREE.Mesh(boundingBoxGeometry, boundingBoxMaterial);
-                // this.add(this.boundingBox);
+                const boundingBoxGeometry = new BoxGeometry(
+                    dimensions.x,
+                    dimensions.y,
+                    dimensions.z,
+                    2,
+                    4,
+                    12,
+                );
+                const boundingBoxMaterial = new MeshBasicMaterial(
+                    { color: 0xff00ff, visible: true, wireframe: true },
+                );
+                this._boundingBox = new Mesh(boundingBoxGeometry, boundingBoxMaterial);
+                this.add(this._boundingBox);
             },
         );
 
         loader.load(
             'assets/models/sails.json',
             (mesh) => {
-                this.sails = mesh;
-                this.sails.castShadow = true;
-                this.sails.receiveShadow = true;
-                this.sails.geometry.scale(scale, scale, scale);
-                this.add(this.sails);
+                this._sails = mesh;
+                this._sails.castShadow = true;
+                this._sails.receiveShadow = true;
+                this._sails.geometry.scale(scale, scale, scale);
+                this.add(this._sails);
             },
         );
+
+        this._acceleration = new Vector3();
     }
 
-    update(dt: number): void {
+    update(dt: number, inputStates: IInputStates): void {
+        this._runtime += dt;
+        this.handleControls(<MyInputStates>inputStates, dt);
+
+        this.position.x += this._acceleration.x;
+        this.position.z += this._acceleration.z;
+
+        // Bop around in the water
+        if (this.enableBop) {
+            this.position.y = -0.5 * Math.sin(2 * this._runtime) + 1.5 * Math.sin(3 * this._runtime) + 0.5;
+            this.rotation.z = Math.sin(1.5 * this._runtime) * 0.1;
+
+            const rot = this._acceleration.x + this._acceleration.z;
+            const maxAngle = 5;
+            this.rotation.x += (rot * Math.PI) / 180;
+            if (this.rotation.x >= (maxAngle * Math.PI) / 180) {
+                this.rotation.x = (maxAngle * Math.PI) / 180;
+            } else if (this.rotation.x <= (-maxAngle * Math.PI) / 180) {
+                this.rotation.x = (-maxAngle * Math.PI) / 180;
+            }
+        }
+
+        this.rotation.x *= 0.99;
+
+        this._acceleration.multiplyScalar(0.99);
+        if (this._acceleration.length() <= 0.01) this._acceleration.multiplyScalar(0.0);
     }
 
-    handleControls(): void {
-    }
+    private handleControls(inputStates: MyInputStates, dt: number) {
+        if (inputStates.up) {
+            this._acceleration.x += -Math.sin(this.rotation.y) * GP.PlayerAcceleration * dt;
+            this._acceleration.z += -Math.cos(this.rotation.y) * GP.PlayerAcceleration * dt;
+        } else if (inputStates.down) {
+            this._acceleration.x += Math.sin(this.rotation.y) * GP.PlayerAcceleration * dt;
+            this._acceleration.z += Math.cos(this.rotation.y) * GP.PlayerAcceleration * dt;
+        }
 
+        if (inputStates.left) {
+            this.rotation.y += GP.PlayerTurnSpeed * dt;
+        } else if (inputStates.right) {
+            this.rotation.y -= GP.PlayerTurnSpeed * dt;
+        }
+    }
 }

@@ -5,15 +5,14 @@ import { GameStateMain } from './GameStateMain';
 import { IGameState } from './IGameState';
 import { IInputManager } from './IInputManager';
 import { WebGLRendererParameters } from 'three/src/renderers/WebGLRenderer';
-import { IInputStates } from './IInputStates';
 
-export class Game<TInputStates extends IInputStates> {
+export class Game {
     public static runtime: number;
 
     private gameElement: Element | HTMLElement;
     private debugElement: Element | HTMLElement;
 
-    private inputManager: IInputManager<TInputStates>;
+    private inputManager: IInputManager;
 
     private lastFrameTime = 0;
     private frameCounter = 0;
@@ -33,7 +32,7 @@ export class Game<TInputStates extends IInputStates> {
     public constructor(
         gameElement: Element | HTMLElement,
         debugElement: Element | HTMLElement,
-        inputManager: IInputManager<TInputStates>,
+        inputManager: IInputManager,
         startupGameState?: IGameState,
         rendererParameters?: WebGLRendererParameters
     ) {
@@ -83,7 +82,7 @@ export class Game<TInputStates extends IInputStates> {
 
         if (this.inputManager.enabled) {
             this.inputManager.update();
-            this.currentGameState.update(deltaT / 1000);
+            this.currentGameState.update(deltaT / 1000, this.inputManager.states);
             this.draw();
         } else if (this.frameCounter % 10 === 0) {
             this.draw();

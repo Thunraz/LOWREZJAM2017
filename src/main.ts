@@ -4,7 +4,7 @@ import { InputManager } from './InputManager';
 import { IInputStates } from './IInputStates';
 import { IInputKeyMap, TCodeActionMap } from './IInputKeyMap';
 
-class MyInputStates extends IInputStates {
+export class MyInputStates extends IInputStates {
     // Keyboard
     public up = false;
     public down = false;
@@ -36,10 +36,7 @@ class MyInputKeyMap extends IInputKeyMap {
 
 const gameElement = document.querySelector('#game');
 const debugElement = document.querySelector('#debug');
-
-const inputStates = new MyInputStates();
-const inputKeyMap = new MyInputKeyMap();
-const inputManager = new InputManager(inputStates, inputKeyMap);
+const inputManager = new InputManager(new MyInputStates(), new MyInputKeyMap());
 
 const game = new Game(gameElement, debugElement, inputManager);
 game.start();
