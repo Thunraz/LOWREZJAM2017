@@ -10,11 +10,11 @@ import { IInputStates } from './IInputStates';
 export class GameStateMain implements IGameState {
     private readonly _scene: Scene;
     private readonly _camera: Camera;
-    private readonly player: Player;
-    private readonly waterTrail: WaterTrail;
-    private readonly waterSurface: WaterSurface;
-    private readonly port: Port;
-    private readonly sun: DirectionalLight;
+    private readonly _player: Player;
+    private readonly _waterTrail: WaterTrail;
+    private readonly _waterSurface: WaterSurface;
+    private readonly _port: Port;
+    private readonly _sun: DirectionalLight;
 
     constructor() {
         this._runtime = 0.0;
@@ -25,30 +25,30 @@ export class GameStateMain implements IGameState {
         this._camera.position.set(GP.CameraOffset.x, GP.CameraOffset.y, GP.CameraOffset.z);
         this._camera.lookAt(new Vector3(0, 0, 0));
 
-        this.waterSurface = new WaterSurface();
-        this._scene.add(this.waterSurface);
+        this._waterSurface = new WaterSurface();
+        this._scene.add(this._waterSurface);
 
-        this.player = new Player();
-        this._scene.add(this.player);
+        this._player = new Player();
+        this._scene.add(this._player);
 
-        this.waterTrail = new WaterTrail();
-        this._scene.add(this.waterTrail);
+        this._waterTrail = new WaterTrail();
+        this._scene.add(this._waterTrail);
 
-        this.port = new Port();
-        this.port.position.set(-100, 0, 0);
-        this._scene.add(this.port);
+        this._port = new Port();
+        this._port.position.set(-100, 0, 0);
+        this._scene.add(this._port);
 
-        this.sun = new DirectionalLight(0xffffff, 0.5);
-        this.sun.position.set(GP.SunPosition.x, GP.SunPosition.y, GP.SunPosition.z);
-        this.sun.castShadow = true;
-        this.sun.shadow.camera.near = 0.5;
-        this.sun.shadow.camera.far = 1000;
-        this.sun.shadow.camera.top = 300;
-        this.sun.shadow.camera.right = 200;
-        this.sun.shadow.camera.bottom = -200;
-        this.sun.shadow.camera.left = -200;
-        this.sun.target = this.player;
-        this._scene.add(this.sun);
+        this._sun = new DirectionalLight(0xffffff, 0.5);
+        this._sun.position.set(GP.SunPosition.x, GP.SunPosition.y, GP.SunPosition.z);
+        this._sun.castShadow = true;
+        this._sun.shadow.camera.near = 0.5;
+        this._sun.shadow.camera.far = 1000;
+        this._sun.shadow.camera.top = 300;
+        this._sun.shadow.camera.right = 200;
+        this._sun.shadow.camera.bottom = -200;
+        this._sun.shadow.camera.left = -200;
+        this._sun.target = this._player;
+        this._scene.add(this._sun);
 
         const hemiLight = new HemisphereLight(0xffffbb, 0x080820, 1);
         this._scene.add(hemiLight);
@@ -66,7 +66,10 @@ export class GameStateMain implements IGameState {
 
     update(dt: number, inputStates: IInputStates): void {
         this._runtime += dt;
-        this.player.update(dt, inputStates);
-        this.waterSurface.update(dt);
+        this._player.update(dt, inputStates);
+        this._waterTrail.playerRotation = this._player.rotation;
+        this._waterTrail.playerPosition = this._player.position;
+        this._waterTrail.update(dt);
+        this._waterSurface.update(dt);
     }
 }
