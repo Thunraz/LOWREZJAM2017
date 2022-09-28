@@ -57,12 +57,6 @@ export abstract class IInputKeyMap {
      * @returns {string} the action assigned to the key
      */
     public getActionForKey(code: string): string {
-        const action = this._keyMap.get(code);
-        if (action === undefined) {
-            // eslint-disable-next-line no-console
-            console.warn(`${this.constructor.name}: Action for code '${code}' is undefined`);
-        }
-
-        return action;
+        return this._keyMap.get(code);
     }
 }
