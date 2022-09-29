@@ -3,6 +3,8 @@ import { Game } from './Game';
 import { InputManager } from './InputManager';
 import { IInputStates } from './IInputStates';
 import { IInputKeyMap, TCodeActionMap } from './IInputKeyMap';
+import { GameProperties as GP } from './GameProperties';
+import { GameStateMain } from './GameStateMain';
 
 export class MyInputStates extends IInputStates {
     // Keyboard
@@ -37,6 +39,8 @@ class MyInputKeyMap extends IInputKeyMap {
 const gameElement = document.querySelector('#game');
 const debugElement = document.querySelector('#debug');
 const inputManager = new InputManager(new MyInputStates(), new MyInputKeyMap());
+const resolution = GP.GameResolution;
+const startupGameState = new GameStateMain();
 
-const game = new Game(gameElement, debugElement, inputManager);
+const game = new Game(gameElement, debugElement, resolution, inputManager, startupGameState);
 game.start();

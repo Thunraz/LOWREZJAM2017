@@ -1,7 +1,7 @@
 import { Vector2, Vector3 } from 'three';
 
 export class GameProperties {
-    static get GameSize(): Vector2 {
+    static get GameResolution(): Vector2 {
         return new Vector2(900, 900);
     }
 

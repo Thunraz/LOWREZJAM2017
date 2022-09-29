@@ -1,7 +1,4 @@
-import { PCFShadowMap, WebGLRenderer } from 'three';
-
-import { GameProperties as GP } from './GameProperties';
-import { GameStateMain } from './GameStateMain';
+import { PCFShadowMap, Vector2, WebGLRenderer } from 'three';
 import { IGameState } from './IGameState';
 import { IInputManager } from './IInputManager';
 import { WebGLRendererParameters } from 'three/src/renderers/WebGLRenderer';
@@ -9,15 +6,15 @@ import { WebGLRendererParameters } from 'three/src/renderers/WebGLRenderer';
 export class Game {
     public static runtime: number;
 
-    private gameElement: Element | HTMLElement;
-    private debugElement: Element | HTMLElement;
+    private _gameElement: HTMLElement;
+    private _debugElement: HTMLElement;
 
-    private inputManager: IInputManager;
+    private _inputManager: IInputManager;
 
-    private lastFrameTime = 0;
-    private frameCounter = 0;
+    private _lastFrameTime = 0;
+    private _frameCounter = 0;
 
-    private currentGameState: IGameState;
+    private _currentGameState: IGameState;
 
     private readonly renderer: WebGLRenderer;
 
@@ -25,31 +22,33 @@ export class Game {
      * Initializes a new Game instance
      * @param{Element|HTMLElement} gameElement the element where the game will be rendered in
      * @param{Element|HTMLElement} debugElement the element where debug output will be put
+     * @param{Vector2} resolution the game's render resolution
      * @param{IInputManager} inputManager custom instance of {IInputManager}
-     * @param{IGameState} startupGameState (optional) the game state to start the game with
+     * @param{IGameState} startupGameState the game state to start the game with
      * @param{WebGLRendererParameters} rendererParameters (optional) parameters to pass to the renderer
      */
     public constructor(
         gameElement: Element | HTMLElement,
         debugElement: Element | HTMLElement,
+        resolution: Vector2,
         inputManager: IInputManager,
-        startupGameState?: IGameState,
-        rendererParameters?: WebGLRendererParameters
+        startupGameState: IGameState,
+        rendererParameters?: WebGLRendererParameters,
     ) {
         Game.runtime = 0.0;
 
-        this.gameElement = gameElement;
-        this.debugElement = debugElement;
+        this._gameElement = <HTMLElement>gameElement;
+        this._debugElement = <HTMLElement>debugElement;
 
-        this.inputManager = inputManager;
-        this.currentGameState = startupGameState ?? new GameStateMain();
+        this._inputManager = inputManager;
+        this._currentGameState = startupGameState;
 
         this.renderer = new WebGLRenderer(rendererParameters ?? { antialias: true });
         this.renderer.setPixelRatio(window.devicePixelRatio);
-        this.renderer.setSize(GP.GameSize.x, GP.GameSize.y);
+        this.renderer.setSize(resolution.x, resolution.y);
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = PCFShadowMap;
-        this.gameElement.appendChild(this.renderer.domElement);
+        this._gameElement.appendChild(this.renderer.domElement);
         this.renderer.domElement.removeAttribute('style');
     }
 
@@ -65,7 +64,7 @@ export class Game {
     }
 
     private draw(): void {
-        this.currentGameState.render(this.renderer);
+        this._currentGameState.render(this.renderer);
     }
 
 
@@ -77,17 +76,19 @@ export class Game {
      */
     private gameLoop(currentFrameTime: DOMHighResTimeStamp): void {
         requestAnimationFrame((cft) => this.gameLoop(cft));
-        const deltaT = currentFrameTime - this.lastFrameTime;
-        this.lastFrameTime = currentFrameTime;
+        const deltaT = currentFrameTime - this._lastFrameTime;
+        this._lastFrameTime = currentFrameTime;
 
-        if (this.inputManager.enabled) {
-            this.inputManager.update();
-            this.currentGameState.update(deltaT / 1000, this.inputManager.states);
+        this._debugElement.innerText = '';
+
+        if (this._inputManager.enabled) {
+            this._inputManager.update();
+            this._currentGameState.update(deltaT / 1000, this._inputManager.states);
             this.draw();
-        } else if (this.frameCounter % 10 === 0) {
+        } else if (this._frameCounter % 10 === 0) {
             this.draw();
         }
 
-        this.frameCounter++;
+        this._frameCounter++;
     }
 }
