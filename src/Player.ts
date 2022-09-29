@@ -8,7 +8,7 @@ export class Player extends IGameObject {
     public enableBop = true;
     private _ship: Mesh;
     private _boundingBox: Mesh;
-    private _sails;
+    private _sails: Mesh;
     private _acceleration: Vector3;
     private _runtime: number;
 
@@ -55,7 +55,7 @@ export class Player extends IGameObject {
         loader.load(
             'assets/models/sails.json',
             (mesh) => {
-                this._sails = mesh;
+                this._sails = <Mesh><Object3D>mesh;
                 this._sails.castShadow = true;
                 this._sails.receiveShadow = true;
                 this._sails.geometry.scale(scale, scale, scale);

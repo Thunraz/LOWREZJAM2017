@@ -66,10 +66,11 @@ export class GameStateMain implements IGameState {
 
     update(dt: number, inputStates: IInputStates): void {
         this._runtime += dt;
+
         this._player.update(dt, inputStates);
         this._waterTrail.playerRotation = this._player.rotation;
         this._waterTrail.playerPosition = this._player.position;
-        this._waterTrail.update(dt);
+        this._waterTrail.update();
         this._waterSurface.update(dt);
     }
 }
