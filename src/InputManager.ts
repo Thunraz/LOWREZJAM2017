@@ -1,6 +1,6 @@
-import { IInputManager } from './IInputManager';
-import { IInputStates } from './IInputStates';
-import { IInputKeyMap } from './IInputKeyMap';
+import { IInputManager } from './lib/IInputManager';
+import { IInputStates } from './lib/IInputStates';
+import { IInputKeyMap } from './lib/IInputKeyMap';
 
 export class InputManager implements IInputManager {
     private readonly _noticeElement: HTMLElement;

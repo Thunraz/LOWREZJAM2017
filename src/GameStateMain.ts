@@ -1,11 +1,11 @@
 import { Camera, DirectionalLight, HemisphereLight, PerspectiveCamera, Renderer, Scene, Vector3 } from 'three';
-import { IGameState } from './IGameState';
+import { IGameState } from './lib/IGameState';
 import { Player } from './Player';
 import { GameProperties as GP } from './GameProperties';
 import { WaterSurface } from './WaterSurface';
 import { WaterTrail } from './WaterTrail';
 import { Port } from './Port';
-import { IInputStates } from './IInputStates';
+import { IInputStates } from './lib/IInputStates';
 
 export class GameStateMain implements IGameState {
     private readonly _scene: Scene;

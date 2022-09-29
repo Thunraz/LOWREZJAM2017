@@ -1,4 +1,4 @@
-import { IGameObject } from './IGameObject';
+import { IGameObject } from './lib/IGameObject';
 import {
     BoxGeometry,
     Material,

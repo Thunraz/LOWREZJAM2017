@@ -1,8 +1,8 @@
 import { BoxGeometry, Mesh, MeshBasicMaterial, Object3D, ObjectLoader, Vector3 } from 'three';
-import { IGameObject } from './IGameObject';
+import { IGameObject } from './lib/IGameObject';
 import { MyInputStates } from './main';
 import { GameProperties as GP } from './GameProperties';
-import { IInputStates } from './IInputStates';
+import { IInputStates } from './lib/IInputStates';
 
 export class Player extends IGameObject {
     public enableBop = true;

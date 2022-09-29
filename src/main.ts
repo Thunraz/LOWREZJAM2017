@@ -1,8 +1,8 @@
 import './css/main.css';
-import { Game } from './Game';
+import { Game } from './lib/Game';
 import { InputManager } from './InputManager';
-import { IInputStates } from './IInputStates';
-import { IInputKeyMap, TCodeActionMap } from './IInputKeyMap';
+import { IInputStates } from './lib/IInputStates';
+import { IInputKeyMap, TCodeActionMap } from './lib/IInputKeyMap';
 import { GameProperties as GP } from './GameProperties';
 import { GameStateMain } from './GameStateMain';
 

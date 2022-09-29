@@ -1,5 +1,5 @@
 import { Mesh, MeshStandardMaterial, PlaneGeometry, RepeatWrapping, Texture, TextureLoader, Vector2 } from 'three';
-import { IGameObject } from './IGameObject';
+import { IGameObject } from './lib/IGameObject';
 
 export class WaterSurface extends IGameObject {
     public readonly offset: Vector2;

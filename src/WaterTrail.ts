@@ -1,4 +1,4 @@
-import { IGameObject } from './IGameObject';
+import { IGameObject } from './lib/IGameObject';
 import * as THREE from 'three';
 import { BufferAttribute, BufferGeometry, Euler, Mesh, MeshBasicMaterial, Vector3 } from 'three';
 
