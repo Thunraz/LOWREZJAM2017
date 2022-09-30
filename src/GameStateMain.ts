@@ -67,7 +67,30 @@ export class GameStateMain implements IGameState {
     update(dt: number, inputStates: IInputStates): void {
         this._runtime += dt;
 
+        const oldPlayerPosition = new Vector3(this._player.position.x, 0, this._player.position.z);
         this._player.update(dt, inputStates);
+
+        const playerPositionDelta = oldPlayerPosition.sub(
+            new Vector3(this._player.position.x, 0, this._player.position.z),
+        );
+        this._camera.position.sub(playerPositionDelta);
+
+        // Move water with camera
+        this._waterSurface.position.set(
+            this._camera.position.x - GP.CameraOffset.x,
+            this._camera.position.y - GP.CameraOffset.y,
+            this._camera.position.z - GP.CameraOffset.z,
+        );
+        this._waterSurface.offset.x -= playerPositionDelta.x / 800;
+        this._waterSurface.offset.y += playerPositionDelta.z / 800;
+
+        // Move sun with player
+        this._sun.position.set(
+            this._player.position.x + GP.SunPosition.x,
+            this._player.position.y + GP.SunPosition.y,
+            this._player.position.z + GP.SunPosition.z,
+        );
+
         this._waterTrail.playerRotation = this._player.rotation;
         this._waterTrail.playerPosition = this._player.position;
         this._waterTrail.update();
