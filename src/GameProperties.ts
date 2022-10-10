@@ -14,10 +14,10 @@ export class GameProperties {
     }
 
     static get PlayerAcceleration() {
-        return 1.0;
+        return 0.003;
     }
 
     static get PlayerTurnSpeed() {
-        return 1.0;
+        return 0.003;
     }
 }

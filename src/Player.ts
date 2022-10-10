@@ -91,22 +91,22 @@ export class Player extends IGameObject {
         this.rotation.x *= 0.99;
 
         this._acceleration.multiplyScalar(0.99);
-        if (this._acceleration.length() <= 0.01) this._acceleration.multiplyScalar(0.0);
+        if (this._acceleration.length() <= GP.PlayerAcceleration * 0.1) this._acceleration.multiplyScalar(0.0);
     }
 
     private handleControls(inputStates: MyInputStates, dt: number) {
         if (inputStates.up) {
-            this._acceleration.x += -Math.sin(this.rotation.y) * GP.PlayerAcceleration * dt;
-            this._acceleration.z += -Math.cos(this.rotation.y) * GP.PlayerAcceleration * dt;
+            this._acceleration.x += -Math.sin(this.rotation.y) * GP.PlayerAcceleration;
+            this._acceleration.z += -Math.cos(this.rotation.y) * GP.PlayerAcceleration;
         } else if (inputStates.down) {
-            this._acceleration.x += Math.sin(this.rotation.y) * GP.PlayerAcceleration * dt;
-            this._acceleration.z += Math.cos(this.rotation.y) * GP.PlayerAcceleration * dt;
+            this._acceleration.x += Math.sin(this.rotation.y) * GP.PlayerAcceleration;
+            this._acceleration.z += Math.cos(this.rotation.y) * GP.PlayerAcceleration;
         }
 
         if (inputStates.left) {
-            this.rotation.y += GP.PlayerTurnSpeed * dt;
+            this.rotation.y += GP.PlayerTurnSpeed;
         } else if (inputStates.right) {
-            this.rotation.y -= GP.PlayerTurnSpeed * dt;
+            this.rotation.y -= GP.PlayerTurnSpeed;
         }
     }
 }
