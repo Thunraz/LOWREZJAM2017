@@ -4,17 +4,16 @@ import { IInputManager } from './IInputManager';
 import { WebGLRendererParameters } from 'three/src/renderers/WebGLRenderer';
 
 export class Game {
-    public static runtime: number;
+    private gameElement: HTMLElement;
+    private debugElement: HTMLElement;
 
-    private _gameElement: HTMLElement;
-    private _debugElement: HTMLElement;
+    private inputManager: IInputManager;
 
-    private _inputManager: IInputManager;
+    private lastFrameTime: DOMHighResTimeStamp = 0;
+    private frameCounter = 0;
+    private readonly timeStep = 1 / 60;
 
-    private _lastFrameTime = 0;
-    private _frameCounter = 0;
-
-    private _currentGameState: IGameState;
+    private currentGameState: IGameState;
 
     private readonly renderer: WebGLRenderer;
 
@@ -35,20 +34,18 @@ export class Game {
         startupGameState: IGameState,
         rendererParameters?: WebGLRendererParameters,
     ) {
-        Game.runtime = 0.0;
+        this.gameElement = <HTMLElement>gameElement;
+        this.debugElement = <HTMLElement>debugElement;
 
-        this._gameElement = <HTMLElement>gameElement;
-        this._debugElement = <HTMLElement>debugElement;
-
-        this._inputManager = inputManager;
-        this._currentGameState = startupGameState;
+        this.inputManager = inputManager;
+        this.currentGameState = startupGameState;
 
         this.renderer = new WebGLRenderer(rendererParameters ?? { antialias: true });
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.renderer.setSize(resolution.x, resolution.y);
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = PCFShadowMap;
-        this._gameElement.appendChild(this.renderer.domElement);
+        this.gameElement.appendChild(this.renderer.domElement);
         this.renderer.domElement.removeAttribute('style');
     }
 
@@ -64,7 +61,7 @@ export class Game {
     }
 
     private draw(): void {
-        this._currentGameState.render(this.renderer);
+        this.currentGameState.render(this.renderer);
     }
 
 
@@ -75,20 +72,23 @@ export class Game {
      * @private
      */
     private gameLoop(currentFrameTime: DOMHighResTimeStamp): void {
-        requestAnimationFrame((cft) => this.gameLoop(cft));
-        const deltaT = currentFrameTime - this._lastFrameTime;
-        this._lastFrameTime = currentFrameTime;
+        let deltaT = (currentFrameTime - this.lastFrameTime) / 1000;
+        this.lastFrameTime = currentFrameTime;
 
-        this._debugElement.innerText = '';
+        this.debugElement.innerText = '';
 
-        if (this._inputManager.enabled) {
-            this._inputManager.update();
-            this._currentGameState.update(deltaT / 1000, this._inputManager.states);
+        if (this.inputManager.enabled) {
+            do {
+                this.inputManager.update();
+                this.currentGameState.update(this.timeStep, this.inputManager.states);
+                deltaT -= this.timeStep;
+            } while (deltaT > this.timeStep);
             this.draw();
-        } else if (this._frameCounter % 10 === 0) {
+        } else if (this.frameCounter % 10 === 0) {
             this.draw();
         }
 
-        this._frameCounter++;
+        this.frameCounter++;
+        requestAnimationFrame((cft) => this.gameLoop(cft));
     }
 }
