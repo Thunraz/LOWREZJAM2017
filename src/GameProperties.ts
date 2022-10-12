@@ -9,15 +9,19 @@ export class GameProperties {
         return new Vector3(0, 200, 100);
     }
 
-    static get SunPosition() {
+    static get ButtonTimeout(): number {
+        return 0.25;
+    }
+
+    static get SunPosition(): Vector3 {
         return new Vector3(300, 500, 500);
     }
 
-    static get PlayerAcceleration() {
+    static get PlayerAcceleration(): number {
         return 0.003;
     }
 
-    static get PlayerTurnSpeed() {
+    static get PlayerTurnSpeed(): number {
         return 0.003;
     }
 }

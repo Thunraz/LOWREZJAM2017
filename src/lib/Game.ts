@@ -18,7 +18,7 @@ export class Game {
 
     private currentGameState: IGameState;
 
-    private readonly renderer: WebGLRenderer;
+    private readonly _renderer: WebGLRenderer;
 
     /**
      * Initializes a new Game instance
@@ -44,15 +44,18 @@ export class Game {
         this.inputManager = inputManager;
         this.currentGameState = startupGameState;
 
-        this.renderer = new WebGLRenderer(rendererParameters ?? { antialias: true });
-        this.renderer.setPixelRatio(window.devicePixelRatio);
-        this.renderer.setSize(resolution.x, resolution.y);
-        this.renderer.shadowMap.enabled = true;
-        this.renderer.shadowMap.type = PCFShadowMap;
-        this.gameElement.appendChild(this.renderer.domElement);
-        this.renderer.domElement.removeAttribute('style');
+        this._renderer = new WebGLRenderer(rendererParameters ?? { antialias: true });
+        this._renderer.setPixelRatio(window.devicePixelRatio);
+        this._renderer.setSize(resolution.x, resolution.y);
+        this._renderer.shadowMap.enabled = true;
+        this._renderer.shadowMap.type = PCFShadowMap;
+        this.gameElement.appendChild(this._renderer.domElement);
+        this._renderer.domElement.removeAttribute('style');
     }
 
+    public get renderer() {
+        return this._renderer;
+    }
 
     /**
      * Starts this game instance's main loop
@@ -61,13 +64,27 @@ export class Game {
     public start(): void {
         // eslint-disable-next-line no-console
         console.log('⛵ Welcome to make-sail! 🌊');
+        this.currentGameState.start(this);
         this.gameLoop(0);
+    }
+
+    /**
+     * Writes debug output into debugElement. Is cleared every frame.
+     * @param{string | number | boolean | object} debugText the text to write. If an object is passed,
+     * it will be stringified to JSON
+     * @returns{void}
+     */
+    debug(debugText: string | number | boolean | object): void {
+        let text = debugText;
+        if (typeof (text) === 'object') {
+            text = JSON.stringify(text);
+        }
+        this.debugElement.innerHTML += `${text}\n`;
     }
 
     private draw(): void {
         this.currentGameState.render(this.renderer);
     }
-
 
     /**
      * Runs the actual game loop
