@@ -11,7 +11,10 @@ export class Game {
 
     private lastFrameTime: DOMHighResTimeStamp = 0;
     private frameCounter = 0;
-    private readonly timeStep = 1 / 60;
+
+    private readonly timePerUpdate = 1 / 200;
+    private readonly maxNumberOfUpdatesPerFrame = 100;
+    private lag = 0.0;
 
     private currentGameState: IGameState;
 
@@ -19,7 +22,8 @@ export class Game {
 
     /**
      * Initializes a new Game instance
-     * @param{Element|HTMLElement} gameElement the element where the game will be rendered in
+     * @param{Element|HTMLElement} gameElement the element where the game will be rendered in.
+     * This should be a container and not a canvas element!
      * @param{Element|HTMLElement} debugElement the element where debug output will be put
      * @param{Vector2} resolution the game's render resolution
      * @param{IInputManager} inputManager custom instance of {IInputManager}
@@ -72,17 +76,28 @@ export class Game {
      * @private
      */
     private gameLoop(currentFrameTime: DOMHighResTimeStamp): void {
-        let deltaT = (currentFrameTime - this.lastFrameTime) / 1000;
+        const deltaT = (currentFrameTime - this.lastFrameTime) / 1000;
         this.lastFrameTime = currentFrameTime;
 
         this.debugElement.innerText = '';
 
         if (this.inputManager.enabled) {
+            this.lag += deltaT;
+            let numberOfUpdatesThisFrame = 0;
+
             do {
                 this.inputManager.update();
-                this.currentGameState.update(this.timeStep, this.inputManager.states);
-                deltaT -= this.timeStep;
-            } while (deltaT > this.timeStep);
+                this.currentGameState.update(this.timePerUpdate, this.inputManager.states);
+                this.lag -= this.timePerUpdate;
+                numberOfUpdatesThisFrame++;
+
+                if (numberOfUpdatesThisFrame >= this.maxNumberOfUpdatesPerFrame) {
+                    // eslint-disable-next-line no-console
+                    console.warn(`number of update operations exceeds maximum of ${this.maxNumberOfUpdatesPerFrame}`);
+                    this.lag = 0.0;
+                    break;
+                }
+            } while (this.lag >= this.timePerUpdate);
             this.draw();
         } else if (this.frameCounter % 10 === 0) {
             this.draw();
