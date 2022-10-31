@@ -1,4 +1,15 @@
-import { BoxGeometry, Mesh, MeshBasicMaterial, Object3D, ObjectLoader, Vector3 } from 'three';
+import * as THREE from 'three';
+import {
+    BoxGeometry,
+    BufferGeometry,
+    Line,
+    LineBasicMaterial,
+    Mesh,
+    MeshBasicMaterial,
+    Object3D,
+    ObjectLoader,
+    Vector3
+} from 'three';
 import { IGameObject } from './lib/IGameObject';
 import { MyInputStates } from './main';
 import { GameProperties as GP } from './GameProperties';
@@ -11,6 +22,7 @@ export class Player extends IGameObject {
     private _sails: Mesh;
     private _acceleration: Vector3;
     private _runtime: number;
+    private readonly _line: Line<BufferGeometry, LineBasicMaterial>;
 
     constructor() {
         super();
@@ -64,6 +76,14 @@ export class Player extends IGameObject {
         );
 
         this._acceleration = new Vector3();
+
+        const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, vertexColors: true });
+        const lineGeometry = new THREE.BufferGeometry();
+        lineGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array([]), 3));
+        lineGeometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array([]), 3));
+
+        this._line = new THREE.Line(lineGeometry, lineMaterial);
+        this.add(this._line);
     }
 
     update(dt: number, inputStates: IInputStates): void {
@@ -94,7 +114,8 @@ export class Player extends IGameObject {
         if (this._acceleration.length() <= GP.PlayerAcceleration * 0.1) this._acceleration.multiplyScalar(0.0);
     }
 
-    private handleControls(inputStates: MyInputStates, dt: number) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    private handleControls(inputStates: MyInputStates, _dt: number) {
         if (inputStates.up) {
             this._acceleration.x += -Math.sin(this.rotation.y) * GP.PlayerAcceleration;
             this._acceleration.z += -Math.cos(this.rotation.y) * GP.PlayerAcceleration;

@@ -33,6 +33,7 @@ export abstract class IInputKeyMap {
         this._keyMap.delete(code);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Removes all key assignments for a specific action
      * @param {string} action the action to remove all assignments for

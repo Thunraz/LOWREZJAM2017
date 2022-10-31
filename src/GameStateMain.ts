@@ -123,8 +123,8 @@ export class GameStateMain implements IGameState {
             this.camera.position.y - GP.CameraOffset.y,
             this.camera.position.z - GP.CameraOffset.z,
         );
-        this.waterSurface.offset.x -= playerPositionDelta.x / 800;
-        this.waterSurface.offset.y += playerPositionDelta.z / 800;
+        this.waterSurface.offset.x -= playerPositionDelta.x / 800.0;
+        this.waterSurface.offset.y += playerPositionDelta.z / 800.0;
 
         // Move sun with player
         this.sun.position.set(
@@ -141,7 +141,7 @@ export class GameStateMain implements IGameState {
 
     /* eslint-disable no-console */
     handleControls(inputStates: MyInputStates) {
-        this.game.debug(inputStates.toggleRecord);
+        Game.debug(inputStates.toggleRecord);
         if (inputStates.toggleRecord && this.buttonTimeout <= 0.0) {
             console.log('hey');
             this.buttonTimeout += GP.ButtonTimeout;
@@ -161,7 +161,7 @@ export class GameStateMain implements IGameState {
                     this.mediaRecorder.ondataavailable = (event) => {
                         if (event.data && event.data.size > 0) {
                             this.recordedBlobs.push(event.data);
-                            this.game.debug(this.recordedBlobs.length);
+                            Game.debug(this.recordedBlobs.length);
                         }
                     };
                     this.mediaRecorder.start(100); // collect 100ms of data

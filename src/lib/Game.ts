@@ -4,9 +4,8 @@ import { IInputManager } from './IInputManager';
 import { WebGLRendererParameters } from 'three/src/renderers/WebGLRenderer';
 
 export class Game {
+    private static debugElement: HTMLElement;
     private gameElement: HTMLElement;
-    private debugElement: HTMLElement;
-
     private inputManager: IInputManager;
 
     private lastFrameTime: DOMHighResTimeStamp = 0;
@@ -39,7 +38,7 @@ export class Game {
         rendererParameters?: WebGLRendererParameters,
     ) {
         this.gameElement = <HTMLElement>gameElement;
-        this.debugElement = <HTMLElement>debugElement;
+        Game.debugElement = <HTMLElement>debugElement;
 
         this.inputManager = inputManager;
         this.currentGameState = startupGameState;
@@ -58,6 +57,20 @@ export class Game {
     }
 
     /**
+     * Writes debug output into debugElement. Is cleared every frame.
+     * @param{string | number | boolean | object} debugText the text to write. If an object is passed,
+     * it will be stringified to JSON
+     * @returns{void}
+     */
+    static debug(debugText: string | number | boolean | object): void {
+        let text = debugText;
+        if (typeof (text) === 'object') {
+            text = JSON.stringify(text);
+        }
+        this.debugElement.innerHTML += `${text}\n`;
+    }
+
+    /**
      * Starts this game instance's main loop
      * @returns{void}
      */
@@ -66,20 +79,6 @@ export class Game {
         console.log('⛵ Welcome to make-sail! 🌊');
         this.currentGameState.start(this);
         this.gameLoop(0);
-    }
-
-    /**
-     * Writes debug output into debugElement. Is cleared every frame.
-     * @param{string | number | boolean | object} debugText the text to write. If an object is passed,
-     * it will be stringified to JSON
-     * @returns{void}
-     */
-    debug(debugText: string | number | boolean | object): void {
-        let text = debugText;
-        if (typeof (text) === 'object') {
-            text = JSON.stringify(text);
-        }
-        this.debugElement.innerHTML += `${text}\n`;
     }
 
     private draw(): void {
@@ -96,7 +95,7 @@ export class Game {
         const deltaT = (currentFrameTime - this.lastFrameTime) / 1000;
         this.lastFrameTime = currentFrameTime;
 
-        this.debugElement.innerText = '';
+        Game.debugElement.innerText = '';
 
         if (this.inputManager.enabled) {
             this.lag += deltaT;

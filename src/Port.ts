@@ -11,7 +11,7 @@ import {
 } from 'three';
 
 export class Port extends IGameObject {
-    public showBoundingBox = false;
+    public showBoundingBox = true;
 
     constructor() {
         super();
@@ -31,7 +31,7 @@ export class Port extends IGameObject {
 
                     // Calculate bounding boxes for geometries
                     child.geometry.computeBoundingBox();
-                    // this.createBoundingBox(child);
+                    this.createBoundingBox(child);
 
                     // Apply material to houses
                     if (child.name === 'Houses') {

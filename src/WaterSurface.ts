@@ -35,7 +35,7 @@ export class WaterSurface extends IGameObject {
 
     private loadTextures(): void {
         const textureLoader = new TextureLoader();
-        for (let i = 1; i <= 4; ++i) {
+        for (let i = 1; i <= 4; i++) {
             const texture = textureLoader.load(`assets/img/water-bump-${i}.png`);
             texture.wrapS = RepeatWrapping;
             texture.wrapT = RepeatWrapping;
