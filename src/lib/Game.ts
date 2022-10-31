@@ -95,13 +95,12 @@ export class Game {
         const deltaT = (currentFrameTime - this.lastFrameTime) / 1000;
         this.lastFrameTime = currentFrameTime;
 
-        Game.debugElement.innerText = '';
-
         if (this.inputManager.enabled) {
             this.lag += deltaT;
             let numberOfUpdatesThisFrame = 0;
 
             do {
+                Game.debugElement.innerText = '';
                 this.inputManager.update();
                 this.currentGameState.update(this.timePerUpdate, this.inputManager.states);
                 this.lag -= this.timePerUpdate;
