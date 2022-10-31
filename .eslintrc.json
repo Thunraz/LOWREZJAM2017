@@ -1,31 +1,64 @@
 {
+    "root": true,
     "env": {
-        "browser": true,
-        "commonjs": true,
-        "es6": true,
-        "node": true
+        "browser": true
     },
-    "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
-        "sourceType": "module"
-    },
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
     "rules": {
+        "no-console": "warn",
+        "no-debugger": "warn",
         "no-const-assign": "warn",
         "no-this-before-super": "warn",
-        "no-undef": "warn",
         "no-unreachable": "warn",
-        "no-unused-vars": "warn",
-        "constructor-super": "warn",
-        "valid-typeof": "warn",
         "no-var": "error",
         "no-tabs": "error",
-        "indent": ["error", 4],
-        "no-console": "warn",
+        "no-multi-spaces": "off",
+        "no-trailing-spaces": ["error", { "skipBlankLines": true }],
+        "no-bitwise": "off",
+        "no-plusplus": "off",
         "no-duplicate-imports": "error",
-        "sort-imports": "error",
+        "no-continue": "off",
+
+        "constructor-super": "warn",
+        "valid-typeof": "warn",
+        "indent": ["error", 4, {
+            "SwitchCase": 1
+        }],
         "valid-jsdoc": "warn",
-        "quotes": ["error", "single"]
+        "quotes": ["error", "single"],
+        "quote-props": "off",
+        "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
+
+        "linebreak-style": "off",
+
+        "spaced-comment": [
+            "error",
+            "always",
+            {
+                "block": { "exceptions": ["/"] },
+                "line": { "exceptions": ["*/", "*"] }
+            }
+        ],
+
+        "max-len": [
+            "error",
+            120,
+            2,
+            {
+                "ignoreUrls": true,
+                "ignoreComments": false,
+                "ignoreRegExpLiterals": true,
+                "ignoreStrings": true,
+                "ignoreTemplateLiterals": true
+            }
+        ]
     }
 }
