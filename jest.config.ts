@@ -14,8 +14,8 @@ const config: Config = {
         }
     },
     collectCoverageFrom: [
-        './src/*.ts',
-        './src/**/*.ts',
+        './src/lib/*.ts',
+        './src/lib/**/*.ts',
         '!**/node_modules/**',
         '!**/vendor/**',
     ],
