@@ -12,7 +12,13 @@ const config: Config = {
             lines: 80,
             statements: -10,
         }
-    }
+    },
+    collectCoverageFrom: [
+        './src/*.ts',
+        './src/**/*.ts',
+        '!**/node_modules/**',
+        '!**/vendor/**',
+    ],
 };
 
 export default config;
